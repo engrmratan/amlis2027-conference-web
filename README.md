@@ -1,4 +1,4 @@
-# AMLIS 2027 — Official Conference Website
+# AMLIS 2027 — Conference Website
 
 > **2027 IEEE International Conference on Advancements of Machine Learning and Intelligent Systems**
 > 📅 June 02–04, 2027 · 📍 Sydney, Australia
@@ -128,12 +128,3 @@ npm run preview
 ## State Management
 
 All conference data is managed via **React Context** (`ConferenceContext`) and persisted to **localStorage**. The initial seed data lives in `src/data/initialData.ts` — edit this file to update conference content.
-
----
-
-## Contact
-
-📧 **info@icamlis.org**
-🌐 **https://www.icamlis.org**
-
-© 2027 AMLIS. All rights reserved. · Advancing Machine Learning & Intelligent Systems
