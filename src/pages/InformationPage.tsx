@@ -25,9 +25,8 @@ import {
   CreditCard,
   FileText
 } from 'lucide-react';
-import { useConference } from '../context/ConferenceContext';
-import { CtaBanner } from '../components/CtaBanner';
-import { PageHero } from '../components/PageHero';
+import { useConference } from '../context';
+import { CtaBanner, PageHero, VenueMap } from '../components';
 import conferenceHallImg from '../assets/images/conference_hall_overview_1791972827328.jpg';
 
 interface InformationPageProps {
@@ -35,117 +34,18 @@ interface InformationPageProps {
 }
 
 export const InformationPage: React.FC<InformationPageProps> = ({ onNavigate }) => {
-  const { config, setActiveModal } = useConference();
+  const { config, faqs, setActiveModal } = useConference();
 
   // FAQ State
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [openFaq, setOpenFaq] = useState<string | null>('reg-1');
+  const [openFaq, setOpenFaq] = useState<string | null>(() => (faqs[0]?.id || null));
 
-  const faqCategories = [
-    'All',
-    'Registration & Fees',
-    'Travel & Visa',
-    'Conference & Policies'
-  ];
-
-  const faqs = [
-    // Registration & Fees
-    {
-      id: 'reg-1',
-      category: 'Registration & Fees',
-      question: 'What payment methods are supported for conference registration?',
-      answer: 'We accept major international credit and debit cards (Visa, MasterCard, American Express) via the secure online registration portal. Additionally, academic institutions, university departments, and corporate sponsors requiring bank wire transfer can request an official pro-forma invoice with international SWIFT/IBAN details by contacting the Secretariat at info@amlis2027.org.'
-    },
-    {
-      id: 'reg-2',
-      category: 'Registration & Fees',
-      question: 'How do I qualify for the Student Registration rate?',
-      answer: 'To use the student registration tier ($350 USD for IEEE student members / $400 USD for non-IEEE students), the applicant must be actively enrolled in a recognized undergraduate, master’s, or PhD program. During checkout, you will need to provide your academic supervisor’s institutional email address and upload verifiable student identification or an official university enrolment letter.'
-    },
-    {
-      id: 'reg-3',
-      category: 'Registration & Fees',
-      question: 'Can one registration fee cover more than one accepted paper?',
-      answer: 'Every accepted manuscript must be accompanied by at least one registered author to ensure placement in the technical schedule and publication in the proceedings. If an author has multiple accepted manuscripts, the first paper requires standard author registration, while each subsequent paper is eligible for the discounted Additional Paper fee ($250 USD) rather than requiring multiple full registrations.'
-    },
-    {
-      id: 'reg-4',
-      category: 'Registration & Fees',
-      question: 'What is the cancellation, refund, and registration transfer policy?',
-      answer: 'Registrations may be transferred to a qualified co-author free of charge at any time up to 14 days prior to the conference opening. Written cancellation requests submitted on or before 15 April 2027 are eligible for an 80% refund (with a 20% administrative handling deduction). Due to contractual venue and catering obligations, cancellations received after 15 April 2027 are strictly non-refundable.'
-    },
-    {
-      id: 'reg-5',
-      category: 'Registration & Fees',
-      question: 'When does the registration portal open and close?',
-      answer: 'The official online registration portal opens on 28 February 2027 following the release of author review reports. Early bird discounted rates will remain active until 15 April 2027 (23:59 AoE). Final registration for all presenting authors strictly closes on 30 April 2027.'
-    },
-
-    // Travel, Visa & Logistics
-    {
-      id: 'travel-1',
-      category: 'Travel & Visa',
-      question: 'How do I obtain an official Australian Visa Invitation Letter?',
-      answer: 'Official conference visa invitation letters are issued exclusively to authors of accepted manuscripts and fully registered delegates. Once your paper is accepted or registration is complete, submit your Paper ID, passport full name, date of birth, nationality, and passport number to info@amlis2027.org. Official letters bearing the conference seal and organizing secretariat details are issued as digital PDFs within 2–3 business days.'
-    },
-    {
-      id: 'travel-2',
-      category: 'Travel & Visa',
-      question: 'Which Australian visa subclass should international delegates apply for?',
-      answer: 'Most international academic attendees travel under a Visitor Visa (Subclass 600 - Business Visitor stream) or an Electronic Travel Authority (ETA Subclass 601 / eVisitor Subclass 651), depending on passport eligibility. Because international visa processing times vary significantly, we strongly recommend submitting your visa application at least 8 to 12 weeks before June 2027.'
-    },
-    {
-      id: 'travel-3',
-      category: 'Travel & Visa',
-      question: 'How do I travel from Sydney Kingsford Smith Airport (SYD) to the conference venue?',
-      answer: 'Sydney Airport (SYD) is located just 8 km south of the Central Business District (CBD). The Airport Link train (T8 line) departs every 10 minutes from both International (T1) and Domestic (T2/T3) stations, arriving at Central Station in approximately 13 minutes. Licensed taxis and rideshare services (Uber) take 20–35 minutes depending on traffic conditions.'
-    },
-    {
-      id: 'travel-4',
-      category: 'Travel & Visa',
-      question: 'Are special room blocks and rates available at partner hotels?',
-      answer: 'Yes. The organizing committee has secured negotiated academic rates with selected 4-star and 5-star partner hotels located within 5–15 minutes walking distance of the venue in the Sydney CBD and Darling Harbour precinct. Discount codes and direct reservation links are provided in your registration confirmation email.'
-    },
-    {
-      id: 'travel-5',
-      category: 'Travel & Visa',
-      question: 'How does local public transportation operate in Sydney (trains, light rail, ferries)?',
-      answer: 'Sydney operates on the fully integrated contactless Opal transit network. Delegates do not need to buy paper transit cards—you can simply tap on and tap off at turnstiles, light rail platforms, ferry wharves, and buses using any contactless credit card, debit card, or smartphone wallet (Apple Pay / Google Wallet).'
-    },
-
-    // Conference & Policies
-    {
-      id: 'policy-1',
-      category: 'Conference & Policies',
-      question: 'What are the time limits and slide formatting rules for Oral Presentations?',
-      answer: 'Oral technical sessions allocate 20 minutes per paper: 15 minutes of empirical presentation followed by 5 minutes for audience Q&A. Slides must be formatted in standard 16:9 widescreen aspect ratio (Microsoft PowerPoint .pptx or PDF format) and uploaded to the session room technician at least 15 minutes prior to the start of the scheduled session block.'
-    },
-    {
-      id: 'policy-2',
-      category: 'Conference & Policies',
-      question: 'What are the dimensions and display guidelines for Poster Presentations?',
-      answer: 'Posters must be printed in standard A0 Portrait orientation (841 mm wide × 1189 mm high). Poster boards, velcro adhesives, and mounting pins will be provided on-site in the Grand Exhibition Foyer. At least one designated author must stand by the poster during the allocated 90-minute interactive evaluation session.'
-    },
-    {
-      id: 'policy-3',
-      category: 'Conference & Policies',
-      question: 'Can authors present virtually if they face unexpected travel restrictions?',
-      answer: 'AMLIS 2027 supports a dedicated Virtual Presentation tier for international authors facing documented visa delays, travel restrictions, or medical circumstances. Virtual presenters submit a pre-recorded 15-minute video lecture in advance and must connect live online via the conference platform during their scheduled session slot for peer Q&A.'
-    },
-    {
-      id: 'policy-4',
-      category: 'Conference & Policies',
-      question: 'What are the dietary and accessibility accommodations provided at the venue?',
-      answer: 'The conference venue is 100% wheelchair accessible with ramp entries, accessible elevators, and hearing-loop infrastructure. During registration, delegates can select dietary options including Halal-certified meals, vegetarian, vegan, gluten-free, or specific allergen precautions. All official luncheons, tea breaks, and the Gala Dinner cater for these preferences.'
-    },
-    {
-      id: 'policy-5',
-      category: 'Conference & Policies',
-      question: 'What publication and IEEE indexing criteria apply to accepted manuscripts?',
-      answer: 'All papers that are accepted, registered, and presented at AMLIS 2027 will be submitted for inclusion in IEEE Xplore and indexed in major scientific databases including Scopus and Web of Science. In accordance with standard IEEE non-presentation policy, papers that are not presented at the conference ("no-show" papers) will be excluded from the final proceedings.'
-    }
-  ];
+  const faqCategories = useMemo(() => {
+    const cats = new Set<string>(['All']);
+    faqs.forEach(f => cats.add(f.category));
+    return Array.from(cats);
+  }, [faqs]);
 
   // Filtered FAQs based on category and search query
   const filteredFaqs = useMemo(() => {
@@ -262,7 +162,67 @@ export const InformationPage: React.FC<InformationPageProps> = ({ onNavigate }) 
       </section>
 
       {/* =========================================================
-          2. ATTENDEE TRAVEL & LOGISTICS (SLATE TINT)
+          2. INFORMATION: LOS ANGELES VENUE LOCATION & INTERACTIVE MAP
+      ========================================================= */}
+      <section id="section-venue-information" className="section-venue-information conference-section conference-section-light py-14 sm:py-18 bg-white border-b border-slate-200">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 text-left">
+          {/* Section Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-8 sm:mb-10 gap-3">
+            <div>
+              <span className="text-[10px] font-bold tracking-widest text-blue-600 uppercase block mb-1">
+                VENUE LOCATION & INTERACTIVE MAP
+              </span>
+              <h2 className="text-xl sm:text-2xl lg:text-[28px] font-extrabold text-[#07153b] tracking-tight">
+                Information — Los Angeles Venue Location
+              </h2>
+            </div>
+            <p className="text-xs text-slate-500 max-w-md sm:text-right font-normal">
+              Interactive map, precinct layout, navigation coordinates, and direct transit access for the Los Angeles convention grounds.
+            </p>
+          </div>
+
+          {/* Interactive Map Component with Los Angeles Venue Location */}
+          <VenueMap />
+
+          {/* Key Location Fast Facts */}
+          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70">
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1">
+                Precinct Address
+              </span>
+              <span className="text-xs font-bold text-slate-900 block">1201 S Figueroa St</span>
+              <span className="text-[11px] text-slate-500">Los Angeles, CA 90015, USA</span>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70">
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1">
+                GPS Coordinates
+              </span>
+              <span className="text-xs font-bold text-slate-900 block font-mono">34.0407° N, 118.2690° W</span>
+              <span className="text-[11px] text-slate-500">Downtown Los Angeles (DTLA)</span>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70">
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1">
+                Metro Light Rail
+              </span>
+              <span className="text-xs font-bold text-slate-900 block">Pico Station (A & E Lines)</span>
+              <span className="text-[11px] text-slate-500">4-minute walk to West Hall</span>
+            </div>
+
+            <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70">
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1">
+                Airport Proximity
+              </span>
+              <span className="text-xs font-bold text-slate-900 block">LAX Airport (17 miles)</span>
+              <span className="text-[11px] text-slate-500">FlyAway Bus & Rideshare Hub</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================
+          3. ATTENDEE TRAVEL & LOGISTICS (SLATE TINT)
           4 Cards matching Home Page Section 4 & 8
       ========================================================= */}
       <section id="section-info-logistics" className="section-info-logistics conference-section conference-section-slate py-14 sm:py-18 bg-slate-50/70 border-b border-slate-200">

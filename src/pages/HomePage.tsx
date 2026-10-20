@@ -25,12 +25,27 @@ import {
   Award,
   Building2,
   Microscope,
-  Check
+  Check,
+  Ticket,
+  Store,
+  Mic,
+  Quote,
+  Train,
+  Plane,
+  Hotel,
+  Navigation,
+  Compass
 } from 'lucide-react';
-import { useConference } from '../context/ConferenceContext';
-import { TrackIcon } from '../components/TrackIcon';
-import { CtaBanner } from '../components/CtaBanner';
-import heroBrainImg from '../assets/images/hero-brain.png';
+import { useConference } from '../context';
+import { TrackIcon, CtaBanner, VenueMap } from '../components';
+import sydneyVenueImg from '../assets/images/sydney_icc_venue_1792520944491.jpg';
+import conferenceHallImg from '../assets/images/conference_hall_overview_1791972827328.jpg';
+import conferenceMicImg from '../assets/images/conference_microphone_closeup_1791977765516.jpg';
+import researchWorkspaceImg from '../assets/images/research_laptop_workspace_1791972828276.jpg';
+import speakerSarahImg from '../assets/images/committee_sarah_johnson_1791972866215.jpg';
+import speakerMichaelImg from '../assets/images/committee_michael_chen_1791972866604.jpg';
+import speakerEmilyImg from '../assets/images/committee_emily_davis_1791972867145.jpg';
+import speakerJohnImg from '../assets/images/committee_john_smith_1791972866685.jpg';
 
 interface HomePageProps {
   onNavigate: (path: string) => void;
@@ -39,28 +54,34 @@ interface HomePageProps {
 export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
   const { config, tracks, committee, awards, sponsors, setActiveModal } = useConference();
   const [committeeIndex, setCommitteeIndex] = useState(0);
-  const [synapticPulse, setSynapticPulse] = useState(false);
-  const [activeTelemetry, setActiveTelemetry] = useState<'neural' | 'xai' | 'llm'>('neural');
-  const pulseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Trigger synaptic pulse light animation
-  const triggerSynapticPulse = useCallback(() => {
-    setSynapticPulse(true);
-    if (pulseTimeoutRef.current) {
-      clearTimeout(pulseTimeoutRef.current);
-    }
-    pulseTimeoutRef.current = setTimeout(() => {
-      setSynapticPulse(false);
-    }, 1200);
-  }, []);
+  const [countdown, setCountdown] = useState({
+    days: 263,
+    hours: 12,
+    minutes: 34,
+    seconds: 9
+  });
 
-  // Clean up pulse timeout on unmount
+  // Real-time conference countdown timer towards 11 July 2027
   useEffect(() => {
-    return () => {
-      if (pulseTimeoutRef.current) {
-        clearTimeout(pulseTimeoutRef.current);
+    const targetDate = new Date('2027-07-11T09:00:00+10:00').getTime();
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference > 0) {
+        const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+        setCountdown({ days, hours, minutes, seconds });
       }
     };
+
+    updateCountdown();
+    const timerInterval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(timerInterval);
   }, []);
 
   const nextCommittee = () => {
@@ -133,195 +154,246 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
           1. HERO SECTION (DEEP DARK NAVY: #07153b)
           Showcases the uploaded glowing neural synaptic brain centerpiece
       ========================================================= */}
-      <section id="section-hero" className="section-hero conference-section conference-section-dark relative overflow-hidden bg-[#07153b] text-white pt-24 pb-12 sm:pt-28 sm:pb-16 lg:pt-32 lg:pb-20 border-b border-blue-950">
+      <section id="section-hero" className="section-hero conference-section conference-section-dark relative overflow-hidden bg-[#07153b] text-white pt-24 pb-16 sm:pt-28 sm:pb-20 lg:pt-32 lg:pb-24 border-b border-blue-950/60">
         {/* Subtle architectural cyber grid and ambient neural lighting */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden select-none">
           <div className="absolute inset-0 bg-[radial-gradient(#38bdf8_1px,transparent_1px)] [background-size:24px_24px] opacity-15" />
-          {/* Ambient warm amber & cyan neural radial glow positioned behind the brain centerpiece */}
-          <div className="absolute top-1/2 right-[10%] -translate-y-1/2 w-[280px] sm:w-[420px] lg:w-[520px] h-[280px] sm:h-[420px] lg:h-[520px] rounded-full bg-gradient-to-tr from-amber-500/15 via-cyan-500/15 to-transparent blur-3xl pointer-events-none" />
+          <div className="absolute top-1/2 right-[10%] -translate-y-1/2 w-[320px] sm:w-[480px] lg:w-[600px] h-[320px] sm:h-[480px] lg:h-[600px] rounded-full bg-gradient-to-tr from-blue-600/15 via-cyan-500/15 to-transparent blur-3xl pointer-events-none" />
           <div className="absolute -top-24 left-1/4 w-72 sm:w-96 h-72 sm:h-96 rounded-full bg-blue-600/10 blur-3xl pointer-events-none" />
         </div>
 
-        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-10 items-center">
-            {/* Left Column: Authoritative Title, Thesis, Metadata & CTAs */}
-            <div className="md:col-span-7 space-y-4 sm:space-y-5 text-left">
-              {/* Institutional kicker pill with live pulsing beacon */}
-              <div className="inline-flex flex-wrap items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-950/70 border border-cyan-500/30 text-xs font-semibold text-cyan-300">
-                <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping shrink-0" />
-                <span>IEEE International Conference</span>
-                <span className="text-cyan-600" aria-hidden="true">·</span>
-                <span className="text-slate-300">AMLIS 2027</span>
+        <div className="max-w-[1110px] mx-auto px-4 sm:px-6 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left Column: Authoritative Title, Thesis, Metadata, CTAs & Deadline */}
+            <div className="lg:col-span-7 space-y-4 sm:space-y-5 text-left">
+              {/* Kicker prefix matching screenshot: Red dash + tracking badge */}
+              <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                <span className="text-[11px] font-bold tracking-widest text-cyan-400 uppercase font-mono">
+                  {config.acronym} 2027 · {config.city.toUpperCase()}, {config.country.toUpperCase()}
+                </span>
               </div>
 
-              {/* Main Headline with refined academic scale */}
-              <h1 className="text-2xl sm:text-3xl md:text-3xl lg:text-[30px] font-extrabold text-white tracking-tight leading-[1.25] [text-wrap:balance]">
+              {/* Main Headline with high-impact academic scale */}
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-[46px] font-extrabold text-white tracking-tight leading-[1.16] [text-wrap:balance]">
                 2027 IEEE International Conference on{' '}
-                <span className="block mt-1 text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-sky-200 to-white font-extrabold">
-                  Advancements of Machine Learning & Intelligent Systems
-                </span>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] via-[#60a5fa] to-white font-extrabold">
+                  Future Machine Learning
+                </span>{' '}
+                and Intelligent Systems
               </h1>
 
-              {/* Scholarly Thesis */}
-              <p className="text-sm sm:text-base text-slate-300 font-normal leading-relaxed max-w-xl">
-                A premier international gathering uniting computer scientists, academic researchers, and industry pioneers to present breakthrough discoveries across deep learning, generative artificial intelligence, and trustworthy intelligent systems.
+              {/* Subtitle */}
+              <p className="text-sm sm:text-base text-slate-300 font-normal leading-relaxed max-w-xl pt-1">
+                Join researchers, academics and industry leaders shaping the next generation of machine learning, artificial intelligence and data science.
               </p>
 
-              {/* Date & Location Quick Metadata */}
-              <div className="flex flex-wrap items-center gap-2.5 sm:gap-3.5 pt-1">
-                <div className="flex items-center gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-200 backdrop-blur-sm">
-                  <Calendar className="w-4 h-4 text-amber-400 shrink-0" />
+              {/* Date & Location inline row */}
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 pt-1 text-xs sm:text-sm text-slate-200 font-normal">
+                <div className="flex items-center gap-2.5">
+                  <Calendar className="w-4 h-4 text-cyan-400 shrink-0" />
                   <span>{config.datesText}</span>
                 </div>
-                <div className="flex items-center gap-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-200 backdrop-blur-sm">
+                <div className="flex items-center gap-2.5">
                   <MapPin className="w-4 h-4 text-cyan-400 shrink-0" />
                   <span>{config.venueText}</span>
                 </div>
               </div>
 
-              {/* CTAs */}
-              <div className="flex flex-wrap items-center gap-3 pt-2">
+              {/* CTAs matching screenshot */}
+              <div className="flex flex-wrap items-center gap-3.5 pt-2">
                 <button
                   type="button"
                   onClick={() => setActiveModal('submissionPortal')}
-                  className="flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-lg shadow-blue-500/30 transition-all duration-200 cursor-pointer whitespace-nowrap group"
+                  className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-lg shadow-blue-600/30 transition-all duration-200 cursor-pointer whitespace-nowrap group"
                 >
                   <span>Submit Paper</span>
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                 </button>
+
                 <button
                   type="button"
                   onClick={() => onNavigate('/call-for-papers')}
-                  className="flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 bg-white/10 hover:bg-white/15 active:bg-white/20 border border-white/20 text-white text-xs sm:text-sm font-medium rounded-xl transition-all duration-200 cursor-pointer whitespace-nowrap backdrop-blur-sm"
+                  className="flex items-center gap-2 px-5 py-3 bg-white/5 hover:bg-white/10 active:bg-white/15 border border-white/20 text-white text-xs sm:text-sm font-semibold rounded-xl transition-all duration-200 cursor-pointer whitespace-nowrap backdrop-blur-sm"
                 >
-                  <span>Call for Papers</span>
-                  <ArrowUpRight className="w-4 h-4 text-slate-400" />
+                  <span>View Research Tracks</span>
+                  <ArrowRight className="w-4 h-4 text-slate-300" />
                 </button>
+
                 <button
                   type="button"
                   onClick={() => setActiveModal('template')}
-                  className="text-xs sm:text-sm font-medium text-cyan-300 hover:text-cyan-200 underline underline-offset-4 cursor-pointer px-2 py-2 transition-colors whitespace-nowrap"
+                  className="text-xs sm:text-sm font-medium text-cyan-300 hover:text-cyan-200 underline underline-offset-4 cursor-pointer px-1 py-2 transition-colors whitespace-nowrap"
                 >
-                  Download IEEE Template
+                  IEEE Template
                 </button>
+              </div>
+
+              {/* Bottom Micro Status Line matching screenshot */}
+              <div className="pt-2 text-xs text-slate-400 flex flex-wrap items-center gap-2 font-normal">
+                <span>Deadline <strong className="text-white font-semibold">31 December 2026</strong></span>
+                <span className="text-slate-600">·</span>
+                <span>Proceedings submitted to <strong className="text-slate-200 font-medium">IEEE Xplore</strong></span>
               </div>
             </div>
 
-            {/* Right Column: Holographic Stage Featuring the Given Neural Brain (RESPONSIVE ON ALL DEVICES) */}
-            <div className="md:col-span-5 relative flex items-center justify-center">
-              {/* Responsive Container bounding the scaled holographic stage */}
-              <div className="relative w-[280px] h-[280px] sm:w-[350px] sm:h-[350px] md:w-[360px] md:h-[360px] lg:w-[440px] lg:h-[440px] flex items-center justify-center select-none overflow-visible">
-                {/* Scaled 400x400 Interactive Holographic Stage */}
-                <div className="absolute w-[400px] h-[400px] shrink-0 scale-[0.70] sm:scale-[0.875] md:scale-[0.90] lg:scale-100 origin-center flex items-center justify-center pointer-events-auto transition-transform duration-200">
-                  {/* Holographic Instrument Rings calibrated to the Neural Brain */}
-                  <svg
-                    className="absolute inset-0 w-full h-full pointer-events-none z-0"
-                    viewBox="0 0 400 400"
-                    fill="none"
-                  >
-                    {/* Outer Rotating Coordinate Ring */}
-                    <circle
-                      cx="200"
-                      cy="200"
-                      r="186"
-                      stroke="#38bdf8"
-                      strokeWidth="1"
-                      strokeDasharray="4 8"
-                      className="opacity-40 animate-rotate"
-                    />
-                    {/* Middle Counter-Rotating Synaptic Orbit */}
-                    <circle
-                      cx="200"
-                      cy="200"
-                      r="154"
-                      stroke="#f59e0b"
-                      strokeWidth="1.2"
-                      strokeDasharray="6 10"
-                      className="opacity-35 animate-rotate-orbit-reverse"
-                    />
-                    {/* Inner Optical Reticle */}
-                    <circle
-                      cx="200"
-                      cy="200"
-                      r="120"
-                      stroke="#818cf8"
-                      strokeWidth="0.8"
-                      strokeDasharray="2 6"
-                      className="opacity-30"
-                    />
-                  </svg>
-
-                  {/* Glowing Synaptic Aura behind the Brain */}
-                  <div
-                    className={`absolute inset-8 rounded-full bg-gradient-to-tr from-amber-500/30 via-cyan-400/30 to-indigo-600/30 blur-2xl pointer-events-none transition-all duration-700 ease-out ${
-                      synapticPulse ? 'scale-130 opacity-100 ring-4 ring-cyan-400/40' : 'scale-100 opacity-60'
-                    }`}
+            {/* Right Column: Hero Showcase Card with Sydney ICC Venue and Live Countdown (Matches Screenshot) */}
+            <div className="lg:col-span-5 relative">
+              <div className="relative rounded-3xl overflow-hidden border border-white/15 shadow-2xl bg-slate-900/90 aspect-[4/3] sm:aspect-[16/11] lg:aspect-auto lg:h-[500px] flex flex-col justify-between p-6 sm:p-7 group">
+                {/* Background Image: Aerial view of ICC Sydney & Darling Harbour */}
+                <div className="absolute inset-0 z-0">
+                  <img
+                    src={sydneyVenueImg}
+                    alt="International Convention Centre Sydney (ICC Sydney) and Darling Harbour"
+                    className="w-full h-full object-cover transform scale-105 group-hover:scale-100 transition-transform duration-1000 ease-out"
                   />
-
-                  {/* Interactive Neural Brain Centerpiece Image (triggers on click) */}
-                  <div
-                    onClick={triggerSynapticPulse}
-                    className="relative z-10 w-full h-full flex items-center justify-center cursor-pointer group"
-                    title="Click to trigger neural synaptic light transmission"
-                  >
-                    <img
-                      src={heroBrainImg}
-                      alt="AMLIS 2027 Neural Synaptic Brain"
-                      className={`w-[70%] h-[70%] object-contain drop-shadow-[0_20px_40px_rgba(245,158,11,0.4)] transition-all duration-700 ease-out group-hover:scale-105 ${
-                        synapticPulse ? 'brightness-135 scale-110 drop-shadow-[0_0_60px_rgba(56,189,248,0.95)] contrast-110' : ''
-                      }`}
-                    />
-                  </div>
-
-                  {/* Floating HUD Telemetry Chip 1 (Top Left) */}
-                  <div
-                    onClick={() => setActiveTelemetry('neural')}
-                    className={`absolute -top-1 left-2 z-20 px-3 py-2 rounded-xl bg-[#030a1c]/90 backdrop-blur-md border transition-all duration-200 cursor-pointer shadow-lg animate-float-slow ${
-                      activeTelemetry === 'neural' ? 'border-amber-400/80 ring-1 ring-amber-400/50 shadow-amber-500/20' : 'border-white/15 hover:border-white/30'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping shrink-0" />
-                      <div className="text-left">
-                        <p className="text-[11px] font-bold text-white tracking-wide">Deep Neural</p>
-                        <p className="text-[9px] text-amber-300/90 font-mono">15+ Research Tracks</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Floating HUD Telemetry Chip 2 (Top Right) */}
-                  <div
-                    onClick={() => setActiveTelemetry('xai')}
-                    className={`absolute -top-1 -right-2 z-20 px-3 py-2 rounded-xl bg-[#030a1c]/90 backdrop-blur-md border transition-all duration-200 cursor-pointer shadow-lg animate-float-delayed ${
-                      activeTelemetry === 'xai' ? 'border-cyan-400/80 ring-1 ring-cyan-400/50 shadow-cyan-500/20' : 'border-white/15 hover:border-white/30'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                      <div className="text-left">
-                        <p className="text-[11px] font-bold text-white tracking-wide">Trustworthy & XAI</p>
-                        <p className="text-[9px] text-cyan-300/90 font-mono">Double-Blind Review</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Floating HUD Telemetry Chip 3 (Bottom Left) */}
-                  <div
-                    onClick={() => setActiveTelemetry('llm')}
-                    className={`absolute -bottom-2 -left-2 z-20 px-3 py-2 rounded-xl bg-[#030a1c]/90 backdrop-blur-md border transition-all duration-200 cursor-pointer shadow-lg animate-float ${
-                      activeTelemetry === 'llm' ? 'border-blue-400/80 ring-1 ring-blue-400/50 shadow-blue-500/20' : 'border-white/15 hover:border-white/30'
-                    }`}
-                  >
-                    <div className="flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />
-                      <div className="text-left">
-                        <p className="text-[11px] font-bold text-white tracking-wide">Cognitive AI & LLMs</p>
-                        <p className="text-[9px] text-slate-300 font-mono">Global Submissions</p>
-                      </div>
-                    </div>
-                  </div>
-
+                  {/* Cinematic dark gradient overlay matching screenshot */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#07153b] via-[#07153b]/60 to-[#07153b]/30" />
                 </div>
+
+                {/* Top Overlay: Metric Badge (Matching screenshot) */}
+                <div className="relative z-10 flex items-start justify-end">
+                  <div className="px-3.5 py-2 rounded-xl bg-slate-950/80 backdrop-blur-md border border-white/15 text-right shadow-lg">
+                    <span className="text-xl sm:text-2xl font-black text-white leading-none block">
+                      4
+                    </span>
+                    <span className="text-[9px] font-mono font-bold tracking-wider text-slate-300 uppercase block mt-0.5">
+                      CONFERENCE DAYS
+                    </span>
+                  </div>
+                </div>
+
+                {/* Bottom Overlay Content: Tracks, Host line, and Live Countdown Timer */}
+                <div className="relative z-10 space-y-3 sm:space-y-4 pt-12">
+                  <div>
+                    <span className="text-[10px] font-mono font-bold tracking-widest text-cyan-300 uppercase block mb-1">
+                      ML · AI · DATA SCIENCE · INTELLIGENT SYSTEMS
+                    </span>
+                    <h3 className="text-sm sm:text-base font-bold text-white leading-snug drop-shadow-sm">
+                      Hosted by IEEE NSW Section & GCSTMR, Sydney.
+                    </h3>
+                  </div>
+
+                  {/* 4 Live Countdown Blocks (Matching screenshot) */}
+                  <div className="grid grid-cols-4 gap-2 sm:gap-2.5 pt-1">
+                    <div className="p-2.5 sm:p-3 rounded-xl bg-slate-950/80 backdrop-blur-md border border-white/10 text-center shadow-lg">
+                      <span className="text-lg sm:text-2xl font-black text-white tracking-tight leading-none block font-mono">
+                        {countdown.days}
+                      </span>
+                      <span className="text-[9px] font-mono font-semibold text-slate-400 uppercase tracking-wider block mt-1">
+                        DAYS
+                      </span>
+                    </div>
+
+                    <div className="p-2.5 sm:p-3 rounded-xl bg-slate-950/80 backdrop-blur-md border border-white/10 text-center shadow-lg">
+                      <span className="text-lg sm:text-2xl font-black text-white tracking-tight leading-none block font-mono">
+                        {String(countdown.hours).padStart(2, '0')}
+                      </span>
+                      <span className="text-[9px] font-mono font-semibold text-slate-400 uppercase tracking-wider block mt-1">
+                        HOURS
+                      </span>
+                    </div>
+
+                    <div className="p-2.5 sm:p-3 rounded-xl bg-slate-950/80 backdrop-blur-md border border-white/10 text-center shadow-lg">
+                      <span className="text-lg sm:text-2xl font-black text-white tracking-tight leading-none block font-mono">
+                        {String(countdown.minutes).padStart(2, '0')}
+                      </span>
+                      <span className="text-[9px] font-mono font-semibold text-slate-400 uppercase tracking-wider block mt-1">
+                        MIN
+                      </span>
+                    </div>
+
+                    <div className="p-2.5 sm:p-3 rounded-xl bg-slate-950/80 backdrop-blur-md border border-white/10 text-center shadow-lg">
+                      <span className="text-lg sm:text-2xl font-black text-cyan-400 tracking-tight leading-none block font-mono">
+                        {String(countdown.seconds).padStart(2, '0')}
+                      </span>
+                      <span className="text-[9px] font-mono font-semibold text-slate-400 uppercase tracking-wider block mt-1">
+                        SEC
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================
+          HERO QUICK ACTION BAR (MATCHES SCREENSHOT & SITE DESIGN)
+          4-column ribbon with Paper Submission, Program, Registration, Booth Registration
+      ========================================================= */}
+      <section id="section-hero-quick-actions" className="section-hero-quick-actions relative z-30 -mt-7 sm:-mt-9 lg:-mt-12 px-4 sm:px-6">
+        <div className="max-w-[1100px] mx-auto bg-white rounded-2xl shadow-xl shadow-slate-900/10 border border-slate-200/90 overflow-hidden">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-100">
+            {/* 1. Paper Submission */}
+            <div
+              onClick={() => onNavigate('/submission')}
+              className="p-5 sm:p-6 flex items-center gap-4 text-left hover:bg-slate-50/80 transition-all duration-200 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-[#ebf3fe] text-[#2563eb] flex items-center justify-center shrink-0 border border-blue-100/60 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-105 transition-all duration-200 shadow-2xs">
+                <FileText className="w-5 h-5 stroke-[2]" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-sm sm:text-[15px] font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
+                  Paper Submission
+                </h4>
+                <p className="text-xs text-slate-500 mt-1 font-normal leading-snug">
+                  Guidelines and the submission link.
+                </p>
+              </div>
+            </div>
+
+            {/* 2. Tentative Program */}
+            <div
+              onClick={() => onNavigate('/program')}
+              className="p-5 sm:p-6 flex items-center gap-4 text-left hover:bg-slate-50/80 transition-all duration-200 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-[#ebf3fe] text-[#2563eb] flex items-center justify-center shrink-0 border border-blue-100/60 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-105 transition-all duration-200 shadow-2xs">
+                <Clock className="w-5 h-5 stroke-[2]" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-sm sm:text-[15px] font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
+                  Tentative Program
+                </h4>
+                <p className="text-xs text-slate-500 mt-1 font-normal leading-snug">
+                  Sessions, keynotes and schedule.
+                </p>
+              </div>
+            </div>
+
+            {/* 3. Registration */}
+            <div
+              onClick={() => onNavigate('/registration')}
+              className="p-5 sm:p-6 flex items-center gap-4 text-left hover:bg-slate-50/80 transition-all duration-200 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-[#ebf3fe] text-[#2563eb] flex items-center justify-center shrink-0 border border-blue-100/60 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-105 transition-all duration-200 shadow-2xs">
+                <Ticket className="w-5 h-5 stroke-[2]" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-sm sm:text-[15px] font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
+                  Registration
+                </h4>
+                <p className="text-xs text-slate-500 mt-1 font-normal leading-snug">
+                  Fees and how to register.
+                </p>
+              </div>
+            </div>
+
+            {/* 4. Booth Registration */}
+            <div
+              onClick={() => onNavigate('/sponsors')}
+              className="p-5 sm:p-6 flex items-center gap-4 text-left hover:bg-slate-50/80 transition-all duration-200 cursor-pointer group"
+            >
+              <div className="w-12 h-12 rounded-xl bg-[#ebf3fe] text-[#2563eb] flex items-center justify-center shrink-0 border border-blue-100/60 group-hover:bg-blue-600 group-hover:text-white group-hover:scale-105 transition-all duration-200 shadow-2xs">
+                <Store className="w-5 h-5 stroke-[2]" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h4 className="text-sm sm:text-[15px] font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
+                  Booth Registration
+                </h4>
+                <p className="text-xs text-slate-500 mt-1 font-normal leading-snug">
+                  Exhibit at AMLIS2027.
+                </p>
               </div>
             </div>
           </div>
@@ -616,7 +688,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               {/* Primary Hall Photo */}
               <div className="relative rounded-3xl overflow-hidden aspect-[4/3] bg-slate-900 shadow-2xl border border-white/10">
                 <img
-                  src="/src/assets/images/conference_hall_overview_1791972827328.jpg"
+                  src={conferenceHallImg}
                   alt="AMLIS 2027 Plenary Hall Session"
                   className="w-full h-full object-cover"
                 />
@@ -630,7 +702,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
               {/* Overlapping Keynote Microphone Inset */}
               <div className="absolute -top-5 -right-5 sm:-top-6 sm:-right-6 w-44 sm:w-52 aspect-[4/3] rounded-2xl overflow-hidden border-4 border-[#07153b] shadow-2xl bg-slate-900">
                 <img
-                  src="/src/assets/images/conference_microphone_closeup_1791977765516.jpg"
+                  src={conferenceMicImg}
                   alt="Keynote Lectern Microphone"
                   className="w-full h-full object-cover"
                 />
@@ -704,93 +776,137 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* =========================================================
-          6. PEER REVIEW RIGOR & ACADEMIC INTEGRITY (LIGHT)
-          Featuring Keynote & Review Panel Photography
+          6. REVIEW OF PAPERS & CONFERENCE PROCEEDINGS (MATCHES SCREENSHOT)
+          Side-by-side dual card layout: Review of Papers & Conference Proceedings
       ========================================================= */}
-      <section id="section-peer-review" className="section-peer-review conference-section conference-section-light py-18 sm:py-22 bg-white border-b border-slate-200">
+      <section id="section-review-and-proceedings" className="section-review-and-proceedings conference-section py-16 sm:py-20 bg-slate-50/70 border-b border-slate-200">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center text-left">
-            {/* Left Photo: Keynote & Committee Deliberation */}
-            <div className="lg:col-span-5 relative">
-              <div className="rounded-3xl overflow-hidden aspect-[4/3] bg-slate-100 border border-slate-200 shadow-md">
-                <img
-                  src="/src/assets/images/academic_keynote_discussion_1791972828354.jpg"
-                  alt="Academic Committee and Keynote Evaluation"
-                  className="w-full h-full object-cover"
-                />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch text-left">
+            {/* Left Card: Review of Papers (Light Theme) */}
+            <div className="lg:col-span-7 bg-white rounded-3xl border border-slate-200/90 p-7 sm:p-9 lg:p-10 shadow-xs flex flex-col justify-between">
+              <div>
+                {/* Badge */}
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-[11px] font-bold tracking-widest text-blue-600 uppercase font-mono">
+                    REVIEW OF PAPERS
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#07153b] tracking-tight leading-tight">
+                  Rigorous independent review.
+                </h2>
+
+                {/* Subtitle */}
+                <p className="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed font-normal">
+                  Submissions may be a 4-6 page regular paper or a 1-page abstract. Every paper is reviewed by at least two independent referees.
+                </p>
+
+                {/* 3 Steps Row */}
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 my-7 sm:my-8">
+                  {/* Step 01 */}
+                  <div className="p-4 rounded-2xl border border-slate-200/80 bg-slate-50/50 hover:bg-slate-50 hover:border-blue-200 transition-all flex flex-col justify-between">
+                    <div>
+                      <div className="w-10 h-10 rounded-xl bg-[#ebf3fe] text-[#2563eb] flex items-center justify-center mb-4 border border-blue-100/60 shadow-2xs">
+                        <FileText className="w-5 h-5 stroke-[2]" />
+                      </div>
+                      <span className="text-xs font-mono font-medium text-slate-400 mb-1 block">01</span>
+                      <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 mb-1.5">
+                        Paper submission
+                      </h4>
+                      <p className="text-[11px] text-slate-500 leading-relaxed font-normal">
+                        Authors submit full papers or abstracts through the official portal.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Step 02 */}
+                  <div className="p-4 rounded-2xl border border-slate-200/80 bg-slate-50/50 hover:bg-slate-50 hover:border-blue-200 transition-all flex flex-col justify-between">
+                    <div>
+                      <div className="w-10 h-10 rounded-xl bg-[#ebf3fe] text-[#2563eb] flex items-center justify-center mb-4 border border-blue-100/60 shadow-2xs">
+                        <Users className="w-5 h-5 stroke-[2]" />
+                      </div>
+                      <span className="text-xs font-mono font-medium text-slate-400 mb-1 block">02</span>
+                      <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 mb-1.5">
+                        Independent review
+                      </h4>
+                      <p className="text-[11px] text-slate-500 leading-relaxed font-normal">
+                        Each paper is refereed by at least two independent reviewers.
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Step 03 */}
+                  <div className="p-4 rounded-2xl border border-slate-200/80 bg-slate-50/50 hover:bg-slate-50 hover:border-blue-200 transition-all flex flex-col justify-between">
+                    <div>
+                      <div className="w-10 h-10 rounded-xl bg-[#ebf3fe] text-[#2563eb] flex items-center justify-center mb-4 border border-blue-100/60 shadow-2xs">
+                        <CheckCircle2 className="w-5 h-5 stroke-[2]" />
+                      </div>
+                      <span className="text-xs font-mono font-medium text-slate-400 mb-1 block">03</span>
+                      <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 mb-1.5">
+                        Decision and feedback
+                      </h4>
+                      <p className="text-[11px] text-slate-500 leading-relaxed font-normal">
+                        Authors receive review reports and the final decision.
+                      </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div className="p-4 mt-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600">
-                <span className="font-semibold text-slate-900 block">Editorial Integrity</span>
-                Every submission undergoes double-blind evaluation by at least two independent expert referees.
+
+              {/* Bottom Pill Badge */}
+              <div className="pt-2">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#ebf3fe] border border-blue-100 text-[#2563eb] text-xs font-semibold self-start shadow-2xs">
+                  <CheckCircle2 className="w-4 h-4 text-[#2563eb] shrink-0" />
+                  <span>Minimum two reviewers per submission</span>
+                </div>
               </div>
             </div>
 
-            {/* Right: 3-Stage Peer Review Pipeline */}
-            <div className="lg:col-span-7 space-y-5">
-              <div>
-                <span className="text-[10.5px] font-bold tracking-widest text-blue-600 uppercase block mb-1">
-                  Scientific Quality Control
-                </span>
-                <h2 className="text-xl sm:text-2xl font-extrabold text-[#07153b] tracking-tight">
-                  Transparent Double-Blind Peer Review
+            {/* Right Card: Conference Proceedings (Dark Theme) */}
+            <div className="lg:col-span-5 bg-[#07153b] rounded-3xl border border-blue-900/60 p-7 sm:p-9 lg:p-10 text-white shadow-xl flex flex-col justify-between relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-80 h-80 bg-gradient-to-br from-blue-500/15 via-cyan-500/10 to-transparent rounded-full blur-3xl pointer-events-none" />
+
+              <div className="relative z-10">
+                {/* Badge */}
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="text-[11px] font-bold tracking-widest text-cyan-400 uppercase font-mono">
+                    CONFERENCE PROCEEDINGS
+                  </span>
+                </div>
+
+                {/* Title */}
+                <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-white tracking-tight leading-tight">
+                  Research prepared for global visibility.
                 </h2>
-                <p className="text-xs text-slate-600 leading-relaxed mt-1.5 font-normal">
-                  To ensure impartiality, all submissions are reviewed with author identities strictly withheld. Reviewers evaluate technical novelty, experimental soundness, clarity, and relevance.
+
+                {/* Subtitle */}
+                <p className="text-xs sm:text-sm text-slate-300 mt-3 leading-relaxed font-normal">
+                  Accepted, registered and presented papers will be submitted to the conference proceedings by IEEE Xplore.
                 </p>
-              </div>
 
-              <div className="space-y-3">
-                <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 flex items-start gap-3.5">
-                  <div className="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0">
-                    01
+                {/* Bullet Points with Cyan Dots */}
+                <div className="space-y-4 my-8 text-xs sm:text-sm text-slate-200 font-medium">
+                  <div className="flex items-center gap-3">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#00b4d8] shrink-0 shadow-sm shadow-cyan-400/50" />
+                    <span>IEEE conference proceedings</span>
                   </div>
-                  <div>
-                    <h4 className="text-xs sm:text-[13px] font-bold text-slate-900">
-                      Similarity Screening & Desk Check
-                    </h4>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
-                      Submissions are verified for IEEE formatting compliance and screened via CrossCheck/Turnitin.
-                    </p>
+                  <div className="flex items-center gap-3">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#00b4d8] shrink-0 shadow-sm shadow-cyan-400/50" />
+                    <span>Global researcher discoverability</span>
                   </div>
-                </div>
-
-                <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 flex items-start gap-3.5">
-                  <div className="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0">
-                    02
-                  </div>
-                  <div>
-                    <h4 className="text-xs sm:text-[13px] font-bold text-slate-900">
-                      Independent Subject Referee Evaluation
-                    </h4>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
-                      Refereed by a minimum of two independent domain experts using standardized criteria.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50/60 flex items-start gap-3.5">
-                  <div className="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0">
-                    03
-                  </div>
-                  <div>
-                    <h4 className="text-xs sm:text-[13px] font-bold text-slate-900">
-                      Structured Author Feedback & Final Meta-Review
-                    </h4>
-                    <p className="text-[11px] text-slate-500 mt-0.5">
-                      Authors receive constructive referee reports and recommendations for final camera-ready copies.
-                    </p>
+                  <div className="flex items-center gap-3">
+                    <span className="w-2.5 h-2.5 rounded-full bg-[#00b4d8] shrink-0 shadow-sm shadow-cyan-400/50" />
+                    <span>International research visibility</span>
                   </div>
                 </div>
               </div>
 
-              <div className="pt-1">
-                <button
-                  onClick={() => onNavigate('/call-for-papers')}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-semibold rounded-xl transition-colors cursor-pointer"
-                >
-                  <span>Review Guidelines & Ethics</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
+              {/* Bottom Disclaimer */}
+              <div className="relative z-10 pt-4 border-t border-slate-800/80">
+                <p className="text-[11px] text-slate-400 font-normal leading-relaxed">
+                  Publication remains subject to IEEE's own evaluation and approval.
+                </p>
               </div>
             </div>
           </div>
@@ -798,58 +914,315 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* =========================================================
-          7. PROCEEDINGS & SCOPUS INDEXING (DARK BLUE: #091b42)
-          Authoritative academic publishing details
+          7. KEYNOTE HIGHLIGHTS GRID SECTION (BELOW REVIEW OF PAPERS)
+          Featuring Profile Cards for Invited Speakers with Photos, Names, and Talk Titles
       ========================================================= */}
-      <section id="section-proceedings" className="section-proceedings conference-section conference-section-dark py-14 sm:py-16 bg-[#091b42] text-white border-b border-blue-950">
+      <section id="section-keynote-highlights" className="section-keynote-highlights conference-section conference-section-light py-18 sm:py-22 bg-white border-b border-slate-200">
         <div className="max-w-[1100px] mx-auto px-4 sm:px-6 text-left">
-          <div className="max-w-2xl mb-8">
-            <span className="text-[10.5px] font-bold tracking-widest text-[#00b4d8] uppercase block mb-1">
-              Publication & Indexation
-            </span>
-            <h2 className="text-xl sm:text-2xl lg:text-[28px] font-extrabold text-white tracking-tight">
-              Conference Proceedings & Scopus Indexing
-            </h2>
-            <p className="text-xs text-slate-300 mt-1.5 font-normal leading-relaxed">
-              Research presented at AMLIS 2027 is prepared for global discoverability and scholarly citation impact.
-            </p>
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[11px] font-bold tracking-widest text-blue-600 uppercase font-mono">
+                  INVITED PLENARY SPEAKERS
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#07153b] tracking-tight">
+                Keynote Highlights
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl font-normal leading-relaxed">
+                Distinguished international authorities and academic pioneers delivering plenary vision addresses at AMLIS 2027.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => onNavigate('/program')}
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-200 hover:border-blue-300 hover:bg-slate-50 text-slate-700 hover:text-blue-600 text-xs font-semibold transition-all cursor-pointer shrink-0 self-start md:self-auto"
+            >
+              <span>View Full Program Schedule</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-[#00b4d8] flex items-center justify-center mb-4">
-                <BookOpen className="w-5 h-5" />
+          {/* 4-Column Keynote Speaker Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {/* Card 1 */}
+            <div className="group rounded-3xl border border-slate-200/90 bg-white hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300 overflow-hidden flex flex-col justify-between">
+              <div>
+                {/* Speaker Photo with Session Badge */}
+                <div className="relative aspect-4/3 overflow-hidden bg-slate-100">
+                  <img
+                    src={speakerSarahImg}
+                    alt="Prof. Dr. Sarah Johnson"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80" />
+                  
+                  {/* Session Badge */}
+                  <div className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 backdrop-blur-md text-[10px] font-bold text-cyan-300 border border-white/10 uppercase tracking-wider">
+                    <Mic className="w-3 h-3 text-cyan-400" />
+                    <span>Keynote I · Day 1</span>
+                  </div>
+
+                  {/* Topic Tag */}
+                  <div className="absolute bottom-3 left-3 right-3 z-10">
+                    <span className="text-[10px] font-mono text-cyan-200 bg-cyan-950/80 border border-cyan-800/80 px-2 py-0.5 rounded tracking-wide uppercase">
+                      Generative AI & LLMs
+                    </span>
+                  </div>
+                </div>
+
+                {/* Speaker Identity & Affiliation */}
+                <div className="p-5 sm:p-6 space-y-3">
+                  <div>
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
+                      Prof. Dr. Sarah Johnson
+                    </h3>
+                    <p className="text-xs text-blue-600 font-medium mt-0.5">
+                      Stanford University, USA
+                    </p>
+                    <p className="text-[11px] text-slate-500 leading-snug">
+                      Chair of Data Intelligence & Machine Learning
+                    </p>
+                  </div>
+
+                  {/* Talk Title & Overview */}
+                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-blue-600 text-[10.5px] font-bold uppercase tracking-wider">
+                      <Quote className="w-3 h-3 text-blue-500 shrink-0" />
+                      <span>Keynote Talk Title</span>
+                    </div>
+                    <h4 className="text-xs font-bold text-slate-900 leading-snug">
+                      "The Next Frontier: Multimodal Foundation Architectures & Generative AI"
+                    </h4>
+                    <p className="text-[11px] text-slate-500 leading-relaxed font-normal pt-1">
+                      Architectural scaling laws, cross-modal latent alignment, and reasoning boundaries in foundation models.
+                    </p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-base font-bold text-white mb-2">Scopus Indexing Submission</h3>
-              <p className="text-xs text-slate-300 leading-relaxed font-normal">
-                Accepted, registered, and presented papers will be submitted for inclusion in major scientific abstracting and indexing databases.
-              </p>
+
+              {/* Card Footer */}
+              <div className="px-5 sm:px-6 pb-5 pt-0">
+                <button
+                  type="button"
+                  onClick={() => onNavigate('/program')}
+                  className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl bg-slate-100 hover:bg-blue-600 text-slate-700 hover:text-white text-xs font-semibold transition-colors cursor-pointer"
+                >
+                  <span>Session Details</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-[#00b4d8] flex items-center justify-center mb-4">
-                <FileCheck className="w-5 h-5" />
+            {/* Card 2 */}
+            <div className="group rounded-3xl border border-slate-200/90 bg-white hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300 overflow-hidden flex flex-col justify-between">
+              <div>
+                {/* Speaker Photo with Session Badge */}
+                <div className="relative aspect-4/3 overflow-hidden bg-slate-100">
+                  <img
+                    src={speakerMichaelImg}
+                    alt="Prof. Dr. Michael Chen"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80" />
+                  
+                  {/* Session Badge */}
+                  <div className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 backdrop-blur-md text-[10px] font-bold text-cyan-300 border border-white/10 uppercase tracking-wider">
+                    <Mic className="w-3 h-3 text-cyan-400" />
+                    <span>Keynote II · Day 2</span>
+                  </div>
+
+                  {/* Topic Tag */}
+                  <div className="absolute bottom-3 left-3 right-3 z-10">
+                    <span className="text-[10px] font-mono text-cyan-200 bg-cyan-950/80 border border-cyan-800/80 px-2 py-0.5 rounded tracking-wide uppercase">
+                      Intelligent Systems & Robotics
+                    </span>
+                  </div>
+                </div>
+
+                {/* Speaker Identity & Affiliation */}
+                <div className="p-5 sm:p-6 space-y-3">
+                  <div>
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
+                      Prof. Dr. Michael Chen
+                    </h3>
+                    <p className="text-xs text-blue-600 font-medium mt-0.5">
+                      Tsinghua University, China
+                    </p>
+                    <p className="text-[11px] text-slate-500 leading-snug">
+                      Professor of Intelligent Automation & Control
+                    </p>
+                  </div>
+
+                  {/* Talk Title & Overview */}
+                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-blue-600 text-[10.5px] font-bold uppercase tracking-wider">
+                      <Quote className="w-3 h-3 text-blue-500 shrink-0" />
+                      <span>Keynote Talk Title</span>
+                    </div>
+                    <h4 className="text-xs font-bold text-slate-900 leading-snug">
+                      "Autonomous Neuro-Symbolic Agents in Dynamic Physical Environments"
+                    </h4>
+                    <p className="text-[11px] text-slate-500 leading-relaxed font-normal pt-1">
+                      Coupling reinforcement learning with formal symbolic verification to guarantee safety in autonomous robotics.
+                    </p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-base font-bold text-white mb-2">IEEE Xplore Alignment</h3>
-              <p className="text-xs text-slate-300 leading-relaxed font-normal">
-                Formatted strictly to IEEE double-column specifications with digital object identifier (DOI) allocation.
-              </p>
+
+              {/* Card Footer */}
+              <div className="px-5 sm:px-6 pb-5 pt-0">
+                <button
+                  type="button"
+                  onClick={() => onNavigate('/program')}
+                  className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl bg-slate-100 hover:bg-blue-600 text-slate-700 hover:text-white text-xs font-semibold transition-colors cursor-pointer"
+                >
+                  <span>Session Details</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
 
-            <div className="p-6 rounded-2xl bg-white/5 border border-white/10">
-              <div className="w-10 h-10 rounded-xl bg-cyan-500/20 text-[#00b4d8] flex items-center justify-center mb-4">
-                <Globe className="w-5 h-5" />
+            {/* Card 3 */}
+            <div className="group rounded-3xl border border-slate-200/90 bg-white hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300 overflow-hidden flex flex-col justify-between">
+              <div>
+                {/* Speaker Photo with Session Badge */}
+                <div className="relative aspect-4/3 overflow-hidden bg-slate-100">
+                  <img
+                    src={speakerEmilyImg}
+                    alt="Prof. Dr. Emily Davis"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80" />
+                  
+                  {/* Session Badge */}
+                  <div className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 backdrop-blur-md text-[10px] font-bold text-cyan-300 border border-white/10 uppercase tracking-wider">
+                    <Mic className="w-3 h-3 text-cyan-400" />
+                    <span>Keynote III · Day 2</span>
+                  </div>
+
+                  {/* Topic Tag */}
+                  <div className="absolute bottom-3 left-3 right-3 z-10">
+                    <span className="text-[10px] font-mono text-cyan-200 bg-cyan-950/80 border border-cyan-800/80 px-2 py-0.5 rounded tracking-wide uppercase">
+                      Trustworthy & Explainable AI
+                    </span>
+                  </div>
+                </div>
+
+                {/* Speaker Identity & Affiliation */}
+                <div className="p-5 sm:p-6 space-y-3">
+                  <div>
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
+                      Prof. Dr. Emily Davis
+                    </h3>
+                    <p className="text-xs text-blue-600 font-medium mt-0.5">
+                      MIT, Cambridge, USA
+                    </p>
+                    <p className="text-[11px] text-slate-500 leading-snug">
+                      Professor of Electrical Engineering & CS
+                    </p>
+                  </div>
+
+                  {/* Talk Title & Overview */}
+                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-blue-600 text-[10.5px] font-bold uppercase tracking-wider">
+                      <Quote className="w-3 h-3 text-blue-500 shrink-0" />
+                      <span>Keynote Talk Title</span>
+                    </div>
+                    <h4 className="text-xs font-bold text-slate-900 leading-snug">
+                      "Provable Fairness, Interpretability & Trust in High-Stakes AI"
+                    </h4>
+                    <p className="text-[11px] text-slate-500 leading-relaxed font-normal pt-1">
+                      Mathematical auditing algorithms and causal explainability methods for clinical healthcare and finance.
+                    </p>
+                  </div>
+                </div>
               </div>
-              <h3 className="text-base font-bold text-white mb-2">Worldwide Scientific Reach</h3>
-              <p className="text-xs text-slate-300 leading-relaxed font-normal">
-                Maximized visibility for academic promotions, institutional grant metrics, and international researcher discovery.
-              </p>
+
+              {/* Card Footer */}
+              <div className="px-5 sm:px-6 pb-5 pt-0">
+                <button
+                  type="button"
+                  onClick={() => onNavigate('/program')}
+                  className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl bg-slate-100 hover:bg-blue-600 text-slate-700 hover:text-white text-xs font-semibold transition-colors cursor-pointer"
+                >
+                  <span>Session Details</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Card 4 */}
+            <div className="group rounded-3xl border border-slate-200/90 bg-white hover:border-blue-300 hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300 overflow-hidden flex flex-col justify-between">
+              <div>
+                {/* Speaker Photo with Session Badge */}
+                <div className="relative aspect-4/3 overflow-hidden bg-slate-100">
+                  <img
+                    src={speakerJohnImg}
+                    alt="Prof. Dr. John Smith"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-80" />
+                  
+                  {/* Session Badge */}
+                  <div className="absolute top-3 left-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-900/80 backdrop-blur-md text-[10px] font-bold text-cyan-300 border border-white/10 uppercase tracking-wider">
+                    <Mic className="w-3 h-3 text-cyan-400" />
+                    <span>Keynote IV · Day 3</span>
+                  </div>
+
+                  {/* Topic Tag */}
+                  <div className="absolute bottom-3 left-3 right-3 z-10">
+                    <span className="text-[10px] font-mono text-cyan-200 bg-cyan-950/80 border border-cyan-800/80 px-2 py-0.5 rounded tracking-wide uppercase">
+                      Deep Learning Optimization
+                    </span>
+                  </div>
+                </div>
+
+                {/* Speaker Identity & Affiliation */}
+                <div className="p-5 sm:p-6 space-y-3">
+                  <div>
+                    <h3 className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors leading-tight">
+                      Prof. Dr. John Smith
+                    </h3>
+                    <p className="text-xs text-blue-600 font-medium mt-0.5">
+                      University of California, Berkeley
+                    </p>
+                    <p className="text-[11px] text-slate-500 leading-snug">
+                      Professor of Computer Science & AI Systems
+                    </p>
+                  </div>
+
+                  {/* Talk Title & Overview */}
+                  <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-blue-600 text-[10.5px] font-bold uppercase tracking-wider">
+                      <Quote className="w-3 h-3 text-blue-500 shrink-0" />
+                      <span>Keynote Talk Title</span>
+                    </div>
+                    <h4 className="text-xs font-bold text-slate-900 leading-snug">
+                      "Scalable Distributed Machine Learning on Next-Gen Accelerators"
+                    </h4>
+                    <p className="text-[11px] text-slate-500 leading-relaxed font-normal pt-1">
+                      Overcoming memory wall constraints and communication bottlenecks across heterogeneous parallel clusters.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card Footer */}
+              <div className="px-5 sm:px-6 pb-5 pt-0">
+                <button
+                  type="button"
+                  onClick={() => onNavigate('/program')}
+                  className="w-full flex items-center justify-center gap-1.5 py-2 rounded-xl bg-slate-100 hover:bg-blue-600 text-slate-700 hover:text-white text-xs font-semibold transition-colors cursor-pointer"
+                >
+                  <span>Session Details</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
           </div>
-
-          <p className="text-[11px] text-slate-400 italic pt-4 border-t border-white/10">
-            Note: Publication and indexation remain subject to applicable peer review evaluation, author registration, oral presentation, and indexing database criteria.
-          </p>
         </div>
       </section>
 
@@ -935,7 +1308,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
             <div className="lg:col-span-5 relative">
               <div className="rounded-3xl overflow-hidden aspect-[4/3] bg-slate-100 border border-slate-200 shadow-md">
                 <img
-                  src="/src/assets/images/research_laptop_workspace_1791972828276.jpg"
+                  src={researchWorkspaceImg}
                   alt="Author Research Workspace and IEEE Template Preparation"
                   className="w-full h-full object-cover"
                 />
@@ -1097,7 +1470,152 @@ export const HomePage: React.FC<HomePageProps> = ({ onNavigate }) => {
       </section>
 
       {/* =========================================================
-          11. ACCEPTED PAPERS & SPONSORS PREVIEW (LIGHT)
+          11. VENUE & HOST CITY (LOS ANGELES LOCATION & INTERACTIVE MAP)
+          Featuring interactive map placeholder, LACC facility overview, transit & accommodations
+      ========================================================= */}
+      <section id="section-venue" className="section-venue conference-section conference-section-light py-18 sm:py-22 bg-white border-b border-slate-200">
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 text-left">
+          {/* Section Header */}
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 sm:mb-12 gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-[11px] font-bold tracking-widest text-blue-600 uppercase font-mono">
+                  CONFERENCE VENUE & HOST CITY
+                </span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl lg:text-[34px] font-extrabold text-[#07153b] tracking-tight">
+                Host Venue — Los Angeles, California
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-600 mt-2 max-w-2xl font-normal leading-relaxed">
+                AMLIS 2027 will convene at the world-renowned Los Angeles Convention Center (LACC), positioned in the South Park district of Downtown Los Angeles (DTLA) steps from L.A. LIVE.
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2.5 self-start md:self-auto shrink-0">
+              <button
+                type="button"
+                onClick={() => onNavigate('/information')}
+                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs transition-colors cursor-pointer"
+              >
+                <span>Full Venue & Travel Guide</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+
+          {/* Key Information Highlight Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {/* 1. Precinct Address */}
+            <div className="p-5 rounded-2xl border border-slate-200/90 bg-slate-50/70 hover:bg-slate-50 transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-blue-100/70 text-blue-700 flex items-center justify-center mb-3">
+                <MapPin className="w-5 h-5" />
+              </div>
+              <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1">
+                Convention Address
+              </span>
+              <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                1201 S Figueroa St
+              </h3>
+              <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                Los Angeles, CA 90015 · South Park District adjacent to L.A. LIVE and Crypto.com Arena.
+              </p>
+            </div>
+
+            {/* 2. Transit & Airport Access */}
+            <div className="p-5 rounded-2xl border border-slate-200/90 bg-slate-50/70 hover:bg-slate-50 transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-emerald-100/70 text-emerald-700 flex items-center justify-center mb-3">
+                <Train className="w-5 h-5" />
+              </div>
+              <span className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider block mb-1">
+                Transit & Airport Links
+              </span>
+              <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                Pico Metro (A & E Lines)
+              </h3>
+              <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                4-minute walk to light rail station · 25–35 min to LAX Airport via FlyAway bus or rideshare.
+              </p>
+            </div>
+
+            {/* 3. Delegate Accommodations */}
+            <div className="p-5 rounded-2xl border border-slate-200/90 bg-slate-50/70 hover:bg-slate-50 transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-amber-100/70 text-amber-700 flex items-center justify-center mb-3">
+                <Hotel className="w-5 h-5" />
+              </div>
+              <span className="text-[10px] font-bold text-amber-600 uppercase tracking-wider block mb-1">
+                Hotel Room Blocks
+              </span>
+              <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                JW Marriott L.A. LIVE
+              </h3>
+              <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                0.3 miles (6 min walk) · Special discounted academic room rates for AMLIS 2027 delegates.
+              </p>
+            </div>
+
+            {/* 4. Facilities & Connectivity */}
+            <div className="p-5 rounded-2xl border border-slate-200/90 bg-slate-50/70 hover:bg-slate-50 transition-colors">
+              <div className="w-10 h-10 rounded-xl bg-purple-100/70 text-purple-700 flex items-center justify-center mb-3">
+                <Building2 className="w-5 h-5" />
+              </div>
+              <span className="text-[10px] font-bold text-purple-600 uppercase tracking-wider block mb-1">
+                Auditorium & Halls
+              </span>
+              <h3 className="text-sm font-bold text-slate-900 leading-snug">
+                1,200-Seat Plenary Hall
+              </h3>
+              <p className="text-[11px] text-slate-600 mt-1 leading-relaxed">
+                West Hall Plenary, 12 parallel oral seminar rooms, 80-poster exhibition & multi-gigabit Wi-Fi.
+              </p>
+            </div>
+          </div>
+
+          {/* Interactive Map Component Container */}
+          <div className="shadow-lg rounded-2xl border border-slate-200/80 overflow-hidden">
+            <VenueMap />
+          </div>
+
+          {/* Bottom Context Banner */}
+          <div className="mt-6 p-4 sm:p-5 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center shrink-0">
+                <Navigation className="w-4 h-4" />
+              </div>
+              <div>
+                <h4 className="font-bold text-slate-900">
+                  Planning Your Trip to Los Angeles?
+                </h4>
+                <p className="text-slate-500 text-[11px] mt-0.5">
+                  View international flight tips, visa invitation letter instructions, and parking directions.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 shrink-0">
+              <a
+                href="https://www.google.com/maps/dir/?api=1&destination=Los+Angeles+Convention+Center+1201+S+Figueroa+St+Los+Angeles+CA+90015"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-semibold transition-colors cursor-pointer"
+              >
+                <span>Open in Google Maps</span>
+                <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+              </a>
+              <button
+                type="button"
+                onClick={() => onNavigate('/information')}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition-colors cursor-pointer"
+              >
+                <span>Travel & VISA Guide</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================
+          12. ACCEPTED PAPERS & SPONSORS PREVIEW (LIGHT)
           Searchable research directory preview and institutional partners
       ========================================================= */}
       <section id="section-accepted-and-sponsors" className="section-accepted-and-sponsors conference-section conference-section-slate py-14 sm:py-16 bg-slate-50/70 border-b border-slate-200">

@@ -11,11 +11,8 @@ import {
   Info,
   X
 } from 'lucide-react';
-import { useConference } from '../context/ConferenceContext';
-import { TrackIcon } from '../components/TrackIcon';
-import { CtaBanner } from '../components/CtaBanner';
-import { PageHero } from '../components/PageHero';
-import { AcceptedPaperItem } from '../types/conference';
+import { useConference, AcceptedPaperItem } from '../context';
+import { TrackIcon, CtaBanner, PageHero } from '../components';
 
 interface AcceptedPapersPageProps {
   onNavigate: (path: string) => void;

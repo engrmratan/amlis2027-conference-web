@@ -18,10 +18,8 @@ import {
   ShieldCheck,
   FileCheck
 } from 'lucide-react';
-import { useConference } from '../context/ConferenceContext';
-import { TrackIcon } from '../components/TrackIcon';
-import { CtaBanner } from '../components/CtaBanner';
-import { PageHero } from '../components/PageHero';
+import { useConference } from '../context';
+import { TrackIcon, CtaBanner, PageHero } from '../components';
 import keynoteDiscussionImg from '../assets/images/academic_keynote_discussion_1791972828354.jpg';
 
 interface AboutPageProps {

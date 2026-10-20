@@ -14,9 +14,8 @@ import {
   ShieldCheck,
   ChevronRight
 } from 'lucide-react';
-import { useConference } from '../context/ConferenceContext';
-import { PageHero } from '../components/PageHero';
-import { CtaBanner } from '../components/CtaBanner';
+import { useConference, isValidEmail, sanitizeInput } from '../context';
+import { PageHero, CtaBanner } from '../components';
 
 interface RegistrationPageProps {
   onNavigate: (path: string) => void;
@@ -46,14 +45,19 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({ onNavigate }
 
   const handleSubmitMessage = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fullName || !emailAddress) return;
+    const cleanName = sanitizeInput(fullName, 100);
+    const cleanEmail = sanitizeInput(emailAddress, 120);
+    const cleanSubject = sanitizeInput(subjectText, 150) || 'Registration Inquiry';
+    const cleanBody = sanitizeInput(messageBody, 5000);
+
+    if (!cleanName || !isValidEmail(cleanEmail)) return;
 
     await sendMessage(
-      fullName,
-      emailAddress,
+      cleanName,
+      cleanEmail,
       'Registration Enquiries',
-      subjectText || 'Registration Inquiry',
-      messageBody
+      cleanSubject,
+      cleanBody
     );
     setFormSent(true);
     setFullName('');
@@ -65,7 +69,8 @@ export const RegistrationPage: React.FC<RegistrationPageProps> = ({ onNavigate }
 
   const handleNotifySubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!notifyEmail) return;
+    const cleanNotifyEmail = sanitizeInput(notifyEmail, 120);
+    if (!isValidEmail(cleanNotifyEmail)) return;
     setNotifySuccess(true);
     setTimeout(() => {
       setNotifySuccess(false);

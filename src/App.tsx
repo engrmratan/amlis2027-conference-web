@@ -1,43 +1,74 @@
 import React, { useState, useEffect } from 'react';
-import { ConferenceProvider, useConference } from './context/ConferenceContext';
-import { Navbar } from './components/Navbar';
-import { Footer } from './components/Footer';
-import { Modals } from './components/Modals';
-
-// Pages
-import { HomePage } from './pages/HomePage';
-import { AboutPage } from './pages/AboutPage';
-import { CallForPapersPage } from './pages/CallForPapersPage';
-import { SubmissionPage } from './pages/SubmissionPage';
-import { RegistrationPage } from './pages/RegistrationPage';
-import { CommitteePage } from './pages/CommitteePage';
-import { ImportantDatesPage } from './pages/ImportantDatesPage';
-import { SubmitPaperPage } from './pages/SubmitPaperPage';
-import { AwardsPage } from './pages/AwardsPage';
-import { ProgramPage } from './pages/ProgramPage';
-import { AcceptedPapersPage } from './pages/AcceptedPapersPage';
-import { SponsorsPage } from './pages/SponsorsPage';
-import { InformationPage } from './pages/InformationPage';
-import { ContactPage } from './pages/ContactPage';
+import { ConferenceProvider, useConference } from './context';
+import { Navbar, Footer, Modals } from './components';
+import {
+  HomePage,
+  AboutPage,
+  CallForPapersPage,
+  SubmissionPage,
+  RegistrationPage,
+  CommitteePage,
+  ImportantDatesPage,
+  SubmitPaperPage,
+  AwardsPage,
+  ProgramPage,
+  AcceptedPapersPage,
+  SponsorsPage,
+  InformationPage,
+  ContactPage
+} from './pages';
 import { ArrowUp } from 'lucide-react';
+
+const KNOWN_ROUTES = [
+  '/about',
+  '/call-for-papers',
+  '/submission',
+  '/registration',
+  '/committee',
+  '/important-dates',
+  '/submit-paper',
+  '/awards',
+  '/program',
+  '/accepted-papers',
+  '/sponsors',
+  '/information',
+  '/contact'
+];
 
 const AppContent: React.FC = () => {
   const { setActiveModal } = useConference();
 
-  // Normalize path from window.location
+  // Normalize path from window.location (supports root, subdirectory, and hash fallback)
   const getInitialPath = () => {
+    // 1. Check hash first (e.g., #/about or #about)
+    const hash = window.location.hash.replace(/^#\/?/, '/');
+    if (hash && hash !== '/') {
+      for (const route of KNOWN_ROUTES) {
+        if (hash === route || hash.startsWith(route)) {
+          return route;
+        }
+      }
+    }
+
+    // 2. Check pathname (works even if hosted under /amlis-2027/ or other subfolder)
     const path = window.location.pathname;
-    return path || '/';
+    for (const route of KNOWN_ROUTES) {
+      if (path.endsWith(route)) {
+        return route;
+      }
+    }
+    return '/';
   };
 
   const [currentPath, setCurrentPath] = useState<string>(getInitialPath);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
-    const handlePopState = () => {
-      setCurrentPath(window.location.pathname || '/');
+    const handleNavigation = () => {
+      setCurrentPath(getInitialPath());
     };
-    window.addEventListener('popstate', handlePopState);
+    window.addEventListener('popstate', handleNavigation);
+    window.addEventListener('hashchange', handleNavigation);
 
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 400);
@@ -45,14 +76,33 @@ const AppContent: React.FC = () => {
     window.addEventListener('scroll', handleScroll);
 
     return () => {
-      window.removeEventListener('popstate', handlePopState);
+      window.removeEventListener('popstate', handleNavigation);
+      window.removeEventListener('hashchange', handleNavigation);
       window.removeEventListener('scroll', handleScroll);
     };
   }, []);
 
   const navigateTo = (path: string) => {
-    if (window.location.pathname !== path) {
-      window.history.pushState({}, '', path);
+    // If user is using hash or static host
+    if (window.location.hash.startsWith('#')) {
+      window.location.hash = path;
+    } else {
+      // Preserve subdirectory prefix if hosted in a subfolder
+      const pathname = window.location.pathname;
+      let basePrefix = '';
+      for (const route of KNOWN_ROUTES) {
+        if (pathname.endsWith(route)) {
+          basePrefix = pathname.slice(0, pathname.length - route.length);
+          break;
+        }
+      }
+      if (!basePrefix && pathname !== '/') {
+        basePrefix = pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
+      }
+      const targetUrl = (basePrefix ? basePrefix : '') + (path === '/' ? (basePrefix ? '/' : '/') : path);
+      if (window.location.pathname !== targetUrl) {
+        window.history.pushState({}, '', targetUrl);
+      }
     }
     setCurrentPath(path);
     window.scrollTo({ top: 0, behavior: 'smooth' });

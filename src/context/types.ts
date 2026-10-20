@@ -131,4 +131,14 @@ export interface ConferenceConfig {
   socialLinkedin: string;
   socialX: string;
   socialYoutube: string;
+  venueAddress?: string;
+  officialPhone?: string;
+  aboutSummary?: string;
+}
+
+export interface FaqItem {
+  id: string;
+  category: string;
+  question: string;
+  answer: string;
 }

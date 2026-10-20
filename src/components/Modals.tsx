@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, Download, FileText, ExternalLink, CheckCircle2, AlertCircle, Info, ShieldCheck } from 'lucide-react';
-import { useConference } from '../context/ConferenceContext';
+import { useConference } from '../context';
 
 export const Modals: React.FC = () => {
   const { config, activeModal, setActiveModal } = useConference();

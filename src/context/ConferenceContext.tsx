@@ -9,8 +9,9 @@ import {
   SponsorItem,
   RegistrationTierItem,
   ProgramSessionItem,
-  ContactMessageItem
-} from '../types/conference';
+  ContactMessageItem,
+  FaqItem
+} from './types';
 import {
   INITIAL_CONFIG,
   INITIAL_TRACKS,
@@ -20,9 +21,10 @@ import {
   INITIAL_PAPERS,
   INITIAL_SPONSORS,
   INITIAL_REGISTRATION_TIERS,
-  INITIAL_PROGRAM
-} from '../data/initialData';
-import { sanitizeInput } from '../utils/security';
+  INITIAL_PROGRAM,
+  INITIAL_FAQS
+} from './initialData';
+import { sanitizeInput, safeJsonParse } from './security';
 
 interface ConferenceContextType {
   config: ConferenceConfig;
@@ -61,6 +63,12 @@ interface ConferenceContextType {
   sendMessage: (name: string, email: string, category: string, subject: string, message: string) => Promise<boolean>;
   markMessageRead: (id: string) => void;
   deleteMessage: (id: string) => void;
+  faqs: FaqItem[];
+  updateFaq: (faq: FaqItem) => void;
+  addFaq: (faq: FaqItem) => void;
+  deleteFaq: (id: string) => void;
+  exportAllData: () => string;
+  importFullData: (data: string | Record<string, unknown>) => boolean;
   resetAllData: () => void;
   activeModal: 'template' | 'submissionPortal' | 'contactSuccess' | null;
   setActiveModal: (modal: 'template' | 'submissionPortal' | 'contactSuccess' | null) => void;
@@ -170,6 +178,15 @@ export const ConferenceProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     }
   });
 
+  const [faqs, setFaqs] = useState<FaqItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('amlis_faqs');
+      return saved ? JSON.parse(saved) : INITIAL_FAQS;
+    } catch {
+      return INITIAL_FAQS;
+    }
+  });
+
   const [activeModal, setActiveModal] = useState<'template' | 'submissionPortal' | 'contactSuccess' | null>(null);
 
   // Sync to localStorage
@@ -252,6 +269,14 @@ export const ConferenceProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       console.error(e);
     }
   }, [messages]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('amlis_faqs', JSON.stringify(faqs));
+    } catch (e) {
+      console.error(e);
+    }
+  }, [faqs]);
 
   const updateConfig = (newConfig: Partial<ConferenceConfig>) => {
     setConfig(prev => ({ ...prev, ...newConfig }));
@@ -374,6 +399,68 @@ export const ConferenceProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setMessages(prev => prev.filter(m => m.id !== id));
   };
 
+  const updateFaq = (updatedFaq: FaqItem) => {
+    setFaqs(prev => prev.map(f => f.id === updatedFaq.id ? updatedFaq : f));
+  };
+
+  const addFaq = (newFaq: FaqItem) => {
+    setFaqs(prev => [...prev, newFaq]);
+  };
+
+  const deleteFaq = (id: string) => {
+    setFaqs(prev => prev.filter(f => f.id !== id));
+  };
+
+  const exportAllData = (): string => {
+    const fullData = {
+      config,
+      dates,
+      tracks,
+      committee,
+      registrationTiers,
+      programSessions,
+      awards,
+      papers,
+      sponsors,
+      faqs,
+      exportedAt: new Date().toISOString(),
+      version: '1.0'
+    };
+    return JSON.stringify(fullData, null, 2);
+  };
+
+  const importFullData = (data: string | Record<string, unknown>): boolean => {
+    try {
+      let parsed: Record<string, any>;
+      if (typeof data === 'string') {
+        const result = safeJsonParse<Record<string, any>>(data);
+        if (!result.success || !result.data) {
+          console.error('Failed to parse JSON:', result.error);
+          return false;
+        }
+        parsed = result.data;
+      } else {
+        parsed = data as Record<string, any>;
+      }
+      if (parsed.config && typeof parsed.config === 'object') {
+        setConfig(prev => ({ ...prev, ...parsed.config }));
+      }
+      if (Array.isArray(parsed.dates)) setDates(parsed.dates);
+      if (Array.isArray(parsed.tracks)) setTracks(parsed.tracks);
+      if (Array.isArray(parsed.committee)) setCommittee(parsed.committee);
+      if (Array.isArray(parsed.registrationTiers)) setRegistrationTiers(parsed.registrationTiers);
+      if (Array.isArray(parsed.programSessions)) setProgramSessions(parsed.programSessions);
+      if (Array.isArray(parsed.awards)) setAwards(parsed.awards);
+      if (Array.isArray(parsed.papers)) setPapers(parsed.papers);
+      if (Array.isArray(parsed.sponsors)) setSponsors(parsed.sponsors);
+      if (Array.isArray(parsed.faqs)) setFaqs(parsed.faqs);
+      return true;
+    } catch (err) {
+      console.error('Failed to import data:', err);
+      return false;
+    }
+  };
+
   const resetAllData = () => {
     localStorage.removeItem('amlis_config');
     localStorage.removeItem('amlis_tracks');
@@ -385,6 +472,7 @@ export const ConferenceProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     localStorage.removeItem('amlis_reg_tiers');
     localStorage.removeItem('amlis_program');
     localStorage.removeItem('amlis_messages');
+    localStorage.removeItem('amlis_faqs');
     setConfig(INITIAL_CONFIG);
     setTracks(INITIAL_TRACKS);
     setDates(INITIAL_DATES);
@@ -394,6 +482,7 @@ export const ConferenceProvider: React.FC<{ children: React.ReactNode }> = ({ ch
     setSponsors(INITIAL_SPONSORS);
     setRegistrationTiers(INITIAL_REGISTRATION_TIERS);
     setProgramSessions(INITIAL_PROGRAM);
+    setFaqs(INITIAL_FAQS);
   };
 
   return (
@@ -435,6 +524,12 @@ export const ConferenceProvider: React.FC<{ children: React.ReactNode }> = ({ ch
         sendMessage,
         markMessageRead,
         deleteMessage,
+        faqs,
+        updateFaq,
+        addFaq,
+        deleteFaq,
+        exportAllData,
+        importFullData,
         resetAllData,
         activeModal,
         setActiveModal

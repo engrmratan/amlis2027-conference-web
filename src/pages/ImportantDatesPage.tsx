@@ -13,9 +13,8 @@ import {
   Send,
   Sparkles
 } from 'lucide-react';
-import { useConference } from '../context/ConferenceContext';
-import { CtaBanner } from '../components/CtaBanner';
-import { PageHero } from '../components/PageHero';
+import { useConference } from '../context';
+import { CtaBanner, PageHero } from '../components';
 
 interface ImportantDatesPageProps {
   onNavigate: (path: string) => void;

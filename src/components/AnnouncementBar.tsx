@@ -1,6 +1,6 @@
 import React from 'react';
 import { Megaphone, Linkedin, Twitter, Youtube } from 'lucide-react';
-import { useConference } from '../context/ConferenceContext';
+import { useConference } from '../context';
 
 export const AnnouncementBar: React.FC = () => {
   const { config } = useConference();

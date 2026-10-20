@@ -7,8 +7,9 @@ import {
   AcceptedPaperItem,
   SponsorItem,
   RegistrationTierItem,
-  ProgramSessionItem
-} from '../types/conference';
+  ProgramSessionItem,
+  FaqItem
+} from './types';
 
 export const INITIAL_CONFIG: ConferenceConfig = {
   title: '2027 IEEE International Conference on Advancements of Machine Learning and Intelligent Systems',
@@ -18,6 +19,9 @@ export const INITIAL_CONFIG: ConferenceConfig = {
   venueText: 'Sydney, Australia',
   city: 'Sydney',
   country: 'Australia',
+  venueAddress: 'Sydney International Convention Centre (ICC Sydney), 14 Darling Dr, Sydney NSW 2000, Australia',
+  officialPhone: '+61 2 9215 7100',
+  aboutSummary: 'The 2027 IEEE International Conference on Advancements of Machine Learning and Intelligent Systems (AMLIS 2027) is the premier global forum uniting AI researchers, scientists, industry practitioners, and students to present cutting-edge discoveries in machine intelligence, deep learning, trustworthy AI, and autonomous cyber-physical systems.',
   announcementActive: true,
   announcementText: 'Call for Papers is now open!',
   announcementDeadlineText: 'Submission Deadline: 31 December 2026',
@@ -517,9 +521,9 @@ export const INITIAL_PROGRAM: ProgramSessionItem[] = [
     date: '02 June 2027',
     startTime: '08:30 AM',
     endTime: '09:30 AM',
-    timezone: 'PST (UTC-8)',
+    timezone: 'AEST (UTC+10)',
     title: 'Registration & Welcome Morning Coffee',
-    venue: 'Grand Foyer, Los Angeles Conference Center',
+    venue: 'Grand Foyer, Sydney International Convention Centre (ICC Sydney)',
     category: 'Break',
     description: 'Badge pickup, conference kit distribution, and informal welcome gathering.'
   },
@@ -529,10 +533,10 @@ export const INITIAL_PROGRAM: ProgramSessionItem[] = [
     date: '02 June 2027',
     startTime: '09:30 AM',
     endTime: '10:30 AM',
-    timezone: 'PST (UTC-8)',
+    timezone: 'AEST (UTC+10)',
     title: 'Opening Ceremony & Presidential Address',
     speaker: 'General Conference Chairs',
-    venue: 'Auditorium Hall A',
+    venue: 'Darling Harbour Theatre, ICC Sydney',
     category: 'Ceremony',
     description: 'Official opening remarks from IEEE leadership and AMLIS 2027 General Chairs.'
   },
@@ -542,10 +546,10 @@ export const INITIAL_PROGRAM: ProgramSessionItem[] = [
     date: '02 June 2027',
     startTime: '10:45 AM',
     endTime: '12:00 PM',
-    timezone: 'PST (UTC-8)',
+    timezone: 'AEST (UTC+10)',
     title: 'Keynote I: The Next Frontier of Generative AI & Foundation Models',
     speaker: 'To Be Announced (Distinguished Keynote Speaker)',
-    venue: 'Auditorium Hall A',
+    venue: 'Darling Harbour Theatre, ICC Sydney',
     category: 'Keynote',
     description: 'In-depth exploration of emerging paradigms in multimodal foundation architectures and safety bounds.'
   },
@@ -555,9 +559,9 @@ export const INITIAL_PROGRAM: ProgramSessionItem[] = [
     date: '02 June 2027',
     startTime: '01:30 PM',
     endTime: '03:30 PM',
-    timezone: 'PST (UTC-8)',
+    timezone: 'AEST (UTC+10)',
     title: 'Technical Session 1: Machine Learning & Optimization',
-    venue: 'Conference Room 101',
+    venue: 'Pyrmont Suite 101, ICC Sydney',
     category: 'Technical Session',
     description: 'Peer-reviewed oral paper presentations in machine learning algorithms and convex optimization.'
   },
@@ -567,10 +571,10 @@ export const INITIAL_PROGRAM: ProgramSessionItem[] = [
     date: '03 June 2027',
     startTime: '09:30 AM',
     endTime: '11:00 AM',
-    timezone: 'PST (UTC-8)',
+    timezone: 'AEST (UTC+10)',
     title: 'Keynote II: Trustworthy AI, Explainability & Societal Impact',
     speaker: 'To Be Announced (Leading Scholar)',
-    venue: 'Auditorium Hall A',
+    venue: 'Darling Harbour Theatre, ICC Sydney',
     category: 'Keynote',
     description: 'Bridging algorithmic interpretability with regulatory frameworks and ethical constraints.'
   },
@@ -580,9 +584,9 @@ export const INITIAL_PROGRAM: ProgramSessionItem[] = [
     date: '03 June 2027',
     startTime: '02:00 PM',
     endTime: '04:30 PM',
-    timezone: 'PST (UTC-8)',
+    timezone: 'AEST (UTC+10)',
     title: 'Technical Sessions 2 & 3: Computer Vision & Intelligent Systems',
-    venue: 'Conference Rooms 102 & 103',
+    venue: 'Parkside Rooms 102 & 103, ICC Sydney',
     category: 'Technical Session',
     description: 'Parallel oral presentations on visual perception, spatial AI, robotics, and cyber-physical systems.'
   },
@@ -592,9 +596,9 @@ export const INITIAL_PROGRAM: ProgramSessionItem[] = [
     date: '04 June 2027',
     startTime: '10:00 AM',
     endTime: '12:30 PM',
-    timezone: 'PST (UTC-8)',
+    timezone: 'AEST (UTC+10)',
     title: 'Technical Session 4: NLP & Big Data Science',
-    venue: 'Conference Room 101',
+    venue: 'Pyrmont Suite 101, ICC Sydney',
     category: 'Technical Session',
     description: 'Presentations on language models, speech processing, and distributed data analytics.'
   },
@@ -604,11 +608,110 @@ export const INITIAL_PROGRAM: ProgramSessionItem[] = [
     date: '04 June 2027',
     startTime: '03:30 PM',
     endTime: '05:00 PM',
-    timezone: 'PST (UTC-8)',
+    timezone: 'AEST (UTC+10)',
     title: 'Awards Ceremony & Closing Remarks',
     speaker: 'General Chairs & Award Committee',
-    venue: 'Auditorium Hall A',
+    venue: 'Darling Harbour Theatre, ICC Sydney',
     category: 'Ceremony',
     description: 'Announcement of Best Paper, Best Student Paper, Best Presentation awards, and closing address.'
   }
 ];
+
+export const INITIAL_FAQS: FaqItem[] = [
+  // Registration & Fees
+  {
+    id: 'faq-reg-1',
+    category: 'Registration & Fees',
+    question: 'What payment methods are supported for conference registration?',
+    answer: 'We accept major international credit and debit cards (Visa, MasterCard, American Express) via the secure online registration portal. Additionally, academic institutions, university departments, and corporate sponsors requiring bank wire transfer can request an official pro-forma invoice with international SWIFT/IBAN details by contacting the Secretariat at info@amlis2027.org.'
+  },
+  {
+    id: 'faq-reg-2',
+    category: 'Registration & Fees',
+    question: 'How do I qualify for the Student Registration rate?',
+    answer: 'To use the student registration tier ($350 USD for IEEE student members / $400 USD for non-IEEE students), the applicant must be actively enrolled in a recognized undergraduate, master’s, or PhD program. During checkout, you will need to provide your academic supervisor’s institutional email address and upload verifiable student identification or an official university enrolment letter.'
+  },
+  {
+    id: 'faq-reg-3',
+    category: 'Registration & Fees',
+    question: 'Can one registration fee cover more than one accepted paper?',
+    answer: 'Every accepted manuscript must be accompanied by at least one registered author to ensure placement in the technical schedule and publication in the proceedings. If an author has multiple accepted manuscripts, the first paper requires standard author registration, while each subsequent paper is eligible for the discounted Additional Paper fee ($250 USD) rather than requiring multiple full registrations.'
+  },
+  {
+    id: 'faq-reg-4',
+    category: 'Registration & Fees',
+    question: 'What is the cancellation, refund, and registration transfer policy?',
+    answer: 'Registrations may be transferred to a qualified co-author free of charge at any time up to 14 days prior to the conference opening. Written cancellation requests submitted on or before 15 April 2027 are eligible for an 80% refund (with a 20% administrative handling deduction). Due to contractual venue and catering obligations, cancellations received after 15 April 2027 are strictly non-refundable.'
+  },
+  {
+    id: 'faq-reg-5',
+    category: 'Registration & Fees',
+    question: 'When does the registration portal open and close?',
+    answer: 'The official online registration portal opens on 28 February 2027 following the release of author review reports. Early bird discounted rates will remain active until 15 April 2027 (23:59 AoE). Final registration for all presenting authors strictly closes on 30 April 2027.'
+  },
+
+  // Travel, Visa & Logistics
+  {
+    id: 'faq-travel-1',
+    category: 'Travel & Visa',
+    question: 'How do I obtain an official Australian Visa Invitation Letter?',
+    answer: 'Official conference visa invitation letters are issued exclusively to authors of accepted manuscripts and fully registered delegates. Once your paper is accepted or registration is complete, submit your Paper ID, passport full name, date of birth, nationality, and passport number to info@amlis2027.org. Official letters bearing the conference seal and organizing secretariat details are issued as digital PDFs within 2–3 business days.'
+  },
+  {
+    id: 'faq-travel-2',
+    category: 'Travel & Visa',
+    question: 'Which Australian visa subclass should international delegates apply for?',
+    answer: 'Most international academic attendees travel under a Visitor Visa (Subclass 600 - Business Visitor stream) or an Electronic Travel Authority (ETA Subclass 601 / eVisitor Subclass 651), depending on passport eligibility. Because international visa processing times vary significantly, we strongly recommend submitting your visa application at least 8 to 12 weeks before June 2027.'
+  },
+  {
+    id: 'faq-travel-3',
+    category: 'Travel & Visa',
+    question: 'How do I travel from Sydney Kingsford Smith Airport (SYD) to the conference venue?',
+    answer: 'Sydney Airport (SYD) is located just 8 km south of the Central Business District (CBD). The Airport Link train (T8 line) departs every 10 minutes from both International (T1) and Domestic (T2/T3) stations, arriving at Central Station in approximately 13 minutes. Licensed taxis and rideshare services (Uber) take 20–35 minutes depending on traffic conditions.'
+  },
+  {
+    id: 'faq-travel-4',
+    category: 'Travel & Visa',
+    question: 'Are special room blocks and rates available at partner hotels?',
+    answer: 'Yes. The organizing committee has secured negotiated academic rates with selected 4-star and 5-star partner hotels located within 5–15 minutes walking distance of the venue in the Sydney CBD and Darling Harbour precinct. Discount codes and direct reservation links are provided in your registration confirmation email.'
+  },
+  {
+    id: 'faq-travel-5',
+    category: 'Travel & Visa',
+    question: 'How does local public transportation operate in Sydney (trains, light rail, ferries)?',
+    answer: 'Sydney operates on the fully integrated contactless Opal transit network. Delegates do not need to buy paper transit cards—you can simply tap on and tap off at turnstiles, light rail platforms, ferry wharves, and buses using any contactless credit card, debit card, or smartphone wallet (Apple Pay / Google Wallet).'
+  },
+
+  // Conference & Policies
+  {
+    id: 'faq-policy-1',
+    category: 'Conference & Policies',
+    question: 'Will there be remote or virtual presentation options for authors?',
+    answer: 'AMLIS 2027 is structured primarily as an in-person, immersive international research gathering at ICC Sydney. However, pre-approved virtual oral presentation slots will be facilitated strictly for overseas authors facing documented consular visa rejections or sudden medical travel restrictions.'
+  },
+  {
+    id: 'faq-policy-2',
+    category: 'Conference & Policies',
+    question: 'What is the conference policy on Generative AI and LLM tool usage in submissions?',
+    answer: 'AMLIS 2027 adheres strictly to IEEE Publication Services and Products Board (PSPB) Operations Manual policies. Generative AI tools (e.g., ChatGPT, Claude) may be used for grammar enhancement or initial drafting, but cannot be listed as authors. Authors must disclose any substantial AI tool usage in the Methodology or Acknowledgments section.'
+  },
+  {
+    id: 'faq-policy-3',
+    category: 'Conference & Policies',
+    question: 'What are the technical guidelines for oral and poster presentations?',
+    answer: 'Oral presentations in technical sessions are allocated 15 minutes total (12 minutes presentation + 3 minutes Q&A). Presentation slides should be prepared in 16:9 widescreen format (PDF or PowerPoint). Poster presenters will be provided standard A0 vertical portrait display boards (841 x 1189 mm) and mounting pins in the Exhibition Foyer.'
+  },
+  {
+    id: 'faq-policy-4',
+    category: 'Conference & Policies',
+    question: 'Is the Sydney conference venue fully accessible for delegates with disabilities?',
+    answer: 'Yes. The International Convention Centre Sydney (ICC Sydney) is designed to universal accessibility standards, featuring zero-step street entry, high-capacity passenger elevators, braille tactile signage, accessible wheelchair restrooms, and assisted hearing loop induction systems across all major auditoriums.'
+  },
+  {
+    id: 'faq-policy-5',
+    category: 'Conference & Policies',
+    question: 'Will conference proceedings be submitted to IEEE Xplore and major indexing databases?',
+    answer: 'Yes. All accepted and presented papers that satisfy IEEE review standards and formatting guidelines will be submitted for inclusion in IEEE Xplore Digital Library and subsequently forwarded to Scopus, Ei Compendex, and Google Scholar for indexing.'
+  }
+];
+

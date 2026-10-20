@@ -19,9 +19,8 @@ import {
   ShieldCheck,
   Plane
 } from 'lucide-react';
-import { useConference } from '../context/ConferenceContext';
-import { CtaBanner } from '../components/CtaBanner';
-import { PageHero } from '../components/PageHero';
+import { useConference, isValidEmail, sanitizeInput } from '../context';
+import { CtaBanner, PageHero } from '../components';
 import gcstmrLogo from '../assets/images/gcstmr.png';
 
 interface ContactPageProps {
@@ -46,20 +45,25 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onNavigate }) => {
     e.preventDefault();
     setErrorMessage(null);
 
-    // Validation
-    if (!name.trim()) {
+    // Security & Validation
+    const cleanName = sanitizeInput(name, 100);
+    const cleanEmail = sanitizeInput(email, 120);
+    const cleanSubject = sanitizeInput(subject, 150);
+    const cleanMessage = sanitizeInput(message, 5000);
+
+    if (!cleanName.trim()) {
       setErrorMessage('Please enter your full name.');
       return;
     }
-    if (!email.trim() || !email.includes('@')) {
-      setErrorMessage('Please provide a valid email address.');
+    if (!isValidEmail(cleanEmail)) {
+      setErrorMessage('Please provide a valid institutional or personal email address.');
       return;
     }
-    if (!subject.trim()) {
+    if (!cleanSubject.trim()) {
       setErrorMessage('Please specify the subject of your enquiry.');
       return;
     }
-    if (!message.trim() || message.length < 10) {
+    if (!cleanMessage.trim() || cleanMessage.length < 10) {
       setErrorMessage('Please write a message with at least 10 characters.');
       return;
     }

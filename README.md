@@ -1,130 +1,100 @@
-# AMLIS 2027 — Conference Website
+# AMLIS 2027 — Conference Web Application
 
-> **2027 IEEE International Conference on Advancements of Machine Learning and Intelligent Systems**
-> 📅 June 02–04, 2027 · 📍 Sydney, Australia
-
----
-
-## Overview
-
-This is the official website for **AMLIS 2027**, built as a modern, static React single-page application. No backend server or API keys are required to run this project.
-
-**Tech Stack:**
-- ⚛️ React 19 + TypeScript
-- ⚡ Vite 8 (bundler & dev server)
-- 🎨 Tailwind CSS v4
-- 🔷 Lucide React (icons)
-- 🎞️ Motion (animations)
+Official website codebase for the **2027 IEEE International Conference on Advancements of Machine Learning and Intelligent Systems (AMLIS 2027)**, taking place **02 – 04 June 2027** at the **International Convention Centre Sydney (ICC Sydney), Australia**.
 
 ---
 
-## Project Structure
+## 📁 Project Directory Structure
 
 ```
-amlis-2027/
-├── public/                  # Static public assets (favicon, etc.)
 ├── src/
-│   ├── assets/              # Images and static media
-│   │   └── images/          # Conference photos & logos
-│   ├── components/          # Shared UI components
-│   │   ├── AiNeuralAnimation.tsx  # Hero SVG animation
-│   │   ├── AnnouncementBar.tsx    # Top announcement strip
-│   │   ├── CtaBanner.tsx          # Call-to-action banner
-│   │   ├── Footer.tsx             # Site footer
-│   │   ├── Logo.tsx               # AMLIS brand logo
-│   │   ├── Modals.tsx             # Global modal dialogs
-│   │   ├── Navbar.tsx             # Primary navigation
-│   │   ├── PageHero.tsx           # Page hero header
-│   │   └── TrackIcon.tsx          # Research track icon mapper
-│   ├── context/
-│   │   └── ConferenceContext.tsx  # Global state (React Context + localStorage)
-│   ├── data/
-│   │   └── initialData.ts         # Seed data for all conference sections
-│   ├── pages/               # Route-level page components
-│   │   ├── AboutPage.tsx
-│   │   ├── AcceptedPapersPage.tsx
-│   │   ├── AwardsPage.tsx
-│   │   ├── CallForPapersPage.tsx
-│   │   ├── CommitteePage.tsx
-│   │   ├── ContactPage.tsx
-│   │   ├── HomePage.tsx
-│   │   ├── ImportantDatesPage.tsx
-│   │   ├── InformationPage.tsx
-│   │   ├── ProgramPage.tsx
-│   │   ├── RegistrationPage.tsx
-│   │   ├── SponsorsPage.tsx
-│   │   ├── SubmissionPage.tsx
-│   │   └── SubmitPaperPage.tsx
-│   ├── types/
-│   │   └── conference.ts    # TypeScript interfaces & type definitions
-│   ├── utils/
-│   │   └── security.ts      # Input sanitization & validation helpers
-│   ├── App.tsx              # Root app component & client-side router
-│   ├── index.css            # Global styles & Tailwind directives
-│   └── main.tsx             # React DOM entry point
-├── index.html               # HTML entry point
-├── vite.config.ts           # Vite configuration
-├── tsconfig.json            # TypeScript configuration
-└── package.json             # Project manifest & scripts
+│   ├── assets/                # Visual conference images and media
+│   │   └── images/            # High-resolution hero banners & venue photos
+│   │
+│   ├── components/            # Reusable UI components & layouts
+│   │   ├── index.ts           # Central component barrel export
+│   │   ├── Navbar.tsx         # Responsive top navigation & mobile drawer
+│   │   ├── Footer.tsx         # Institutional footer & administrative links
+│   │   ├── Logo.tsx           # Official IEEE AMLIS conference emblem
+│   │   ├── PageHero.tsx       # Standardized page header banners
+│   │   ├── AnnouncementBar.tsx# Sticky call-for-papers banner
+│   │   ├── CtaBanner.tsx      # Dual-action paper submission ribbons
+│   │   ├── Modals.tsx         # Template downloads & portal dialogs
+│   │   ├── TrackIcon.tsx      # Dynamic track icon mapper
+│   │   ├── AiNeuralAnimation.tsx # Interactive neural canvas animation
+│   │   └── VenueMap.tsx       # Interactive Los Angeles venue location & map
+│   │
+│   ├── context/               # Global state, content data, types & security
+│   │   ├── index.ts           # Central barrel export for context, data & types
+│   │   ├── ConferenceContext.tsx # Central React Context + localStorage persistence
+│   │   ├── initialData.ts     # Complete default dataset (dates, fees, tracks)
+│   │   ├── websiteData.ts     # Master human-readable content documentation
+│   │   ├── types.ts           # TypeScript domain interfaces (Track, Member, FAQ)
+│   │   └── security.ts        # Input sanitization, safe URLs & prototype safety
+│   │
+│   ├── pages/                 # Full website page views
+│   │   ├── index.ts           # Barrel export for all pages
+│   │   ├── HomePage.tsx       # Main conference landing page (12 sections)
+│   │   ├── AboutPage.tsx      # Scope, Sydney venue details & IEEE endorsement
+│   │   ├── CallForPapersPage.tsx # Scientific tracks, topics & publication guide
+│   │   ├── SubmissionPage.tsx # IEEE formatting instructions & review guidelines
+│   │   ├── SubmitPaperPage.tsx # Direct paper draft verification & submission
+│   │   ├── RegistrationPage.tsx # Attendee & author registration tiers & pricing
+│   │   ├── CommitteePage.tsx  # General Chairs, TPC & Advisory boards
+│   │   ├── ImportantDatesPage.tsx # Milestone deadlines & countdowns
+│   │   ├── ProgramPage.tsx    # 3-day technical sessions & keynote schedules
+│   │   ├── AcceptedPapersPage.tsx # Searchable directory of accepted manuscripts
+│   │   ├── AwardsPage.tsx     # Best Paper & Student Paper awards
+│   │   ├── SponsorsPage.tsx   # Corporate sponsors & partnership tiers
+│   │   ├── InformationPage.tsx # Venue, Sydney transit, lodging, VISA & FAQs
+│   │   └── ContactPage.tsx    # Official Secretariat inquiries & contact form
+│   │
+│   ├── App.tsx                # Master client router & page shell
+│   ├── index.css              # Global styles & human row-grid layout classes
+│   └── main.tsx               # React application entry point
+│
+├── index.html                 # HTML document template with SEO metadata
+├── metadata.json              # Applet identity & platform configuration
+├── package.json               # Dependencies and build scripts
+├── tsconfig.json              # TypeScript compiler settings
+└── vite.config.ts             # Vite build & bundler configuration
 ```
 
 ---
 
-## Getting Started
+## ⚡ How to Edit Website Content in Code
 
-### Prerequisites
-- **Node.js** v18 or later
-- **npm** v8 or later
+All website content is centralized in plain TypeScript/JavaScript:
 
-### Installation
-
-```bash
-# Install dependencies
-npm install --legacy-peer-deps
-
-# Start the development server
-npm run dev
-```
-
-The site will open at **http://localhost:3000**.
-
-### Build for Production
-
-```bash
-npm run build
-```
-
-Output is placed in the `dist/` directory. Deploy it to any static hosting service (GitHub Pages, Netlify, Vercel, etc.).
-
-### Preview Production Build
-
-```bash
-npm run preview
-```
+1. Open **`/src/context/initialData.ts`**.
+2. Modify the straightforward configuration objects:
+   - `INITIAL_CONFIG`: Title, dates, location, venue, announcement text, emails, and links.
+   - `INITIAL_DATES`: Milestones, paper submission deadline, review notifications, and registration dates.
+   - `INITIAL_TRACKS`: Technical research tracks, subtopics, and focus areas.
+   - `INITIAL_COMMITTEE`: Chairs, Technical Program Committee (TPC) members, affiliations, and profiles.
+   - `INITIAL_REGISTRATION_TIERS`: Author, student, and IEEE member registration fee tables.
+   - `INITIAL_PROGRAM`: 3-day schedule, keynotes, technical oral presentation sessions, and room venues.
+   - `INITIAL_AWARDS`: Best Paper, Student Paper awards, and prize descriptions.
+   - `INITIAL_FAQS`: Frequently asked questions and answers.
+3. Save the file — the changes will immediately reflect across all 14 conference pages!
 
 ---
 
-## Pages
+## 🛠️ Development & Build Commands
 
-| Route | Description |
-|---|---|
-| `/` | Home — Hero, key dates, tracks, committee preview |
-| `/about` | About — Conference overview, scope, governance |
-| `/call-for-papers` | Tracks, topics, paper types & guidelines |
-| `/submission` | Submission guide, IEEE template, FAQs |
-| `/submit-paper` | Paper formatting requirements |
-| `/important-dates` | Timeline & deadline tracker |
-| `/registration` | Registration categories & fee structure |
-| `/committee` | General chairs, TPC, organizing committee |
-| `/program` | Conference program schedule by day |
-| `/accepted-papers` | Accepted paper directory |
-| `/awards` | Best paper, student, and presentation awards |
-| `/sponsors` | Conference sponsors & supporting partners |
-| `/information` | Venue, travel, accommodation, visa info |
-| `/contact` | Contact form & secretariat information |
+| Command | Action |
+| :--- | :--- |
+| `npm run dev` | Starts the local Vite development server on port 3000 |
+| `npm run build` | Compiles TypeScript and creates an optimized production bundle in `/dist` |
+| `npm run preview` | Previews the production build locally |
+| `npm run lint` | Runs TypeScript type checking (`tsc --noEmit`) to verify correctness |
 
 ---
 
-## State Management
+## 🎨 CSS & Layout System
 
-All conference data is managed via **React Context** (`ConferenceContext`) and persisted to **localStorage**. The initial seed data lives in `src/data/initialData.ts` — edit this file to update conference content.
+The project uses a clean combination of **Tailwind CSS** utilities and human-authored layout classes in `/src/index.css`:
+- `.row-layout`: Flexbox row wrapper with standard gap and wrapping.
+- `.row-grid-2`, `.row-grid-3`, `.row-grid-4`: Standard responsive grid layouts.
+- `.conference-section`: Standard section vertical padding and responsive constraints.
+- `.table-institutional-wrapper`: Standard rounded, bordered institutional table container.
